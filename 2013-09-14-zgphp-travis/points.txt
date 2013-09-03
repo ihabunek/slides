@@ -1,0 +1,22 @@
+- engleski izrazi, huh...
+
+Continuous integration
+- svi koji rade na projektu integriraju svoje izmjene često (dnevno ili češće)
+- integracija = merge na zajednički branch (npr. master ili develop)
+- svaku integraciju provjerava automatizirano testiranje (e.g. phpunit) kako bi
+  se greške otkrile što prije
+- rano otkrivanje i eliminacija grešaka
+
+
+
+TRAVIS CI
+- hosted CI
+- besplatan za sve javne projekte na GitHubu
+
+
+
+- automatsko testiranje
+    - svakog pusha
+    - svakog pull requesta
+- u čistoj okolini
+
