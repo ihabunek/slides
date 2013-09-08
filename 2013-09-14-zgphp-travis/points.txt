@@ -1,22 +1,25 @@
 - engleski izrazi, huh...
 
-Continuous integration
+Kontinuirana integracija
 - svi koji rade na projektu integriraju svoje izmjene često (dnevno ili češće)
 - integracija = merge na zajednički branch (npr. master ili develop)
 - svaku integraciju provjerava automatizirano testiranje (e.g. phpunit) kako bi
   se greške otkrile što prije
 - rano otkrivanje i eliminacija grešaka
 
-
-
 TRAVIS CI
 - hosted CI
 - besplatan za sve javne projekte na GitHubu
 
 
-
+TRAVIS CI
 - automatsko testiranje
     - svakog pusha
     - svakog pull requesta
 - u čistoj okolini
 
+Podrška za razne jezike:
+
+C C++ Clojure Erlang Go Groovy Haskell Java JavaScript (with Node.js) Objective-C Perl PHP Python Ruby Scala
+
+Composer install

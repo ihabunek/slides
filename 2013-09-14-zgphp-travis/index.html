@@ -16,16 +16,19 @@
         <div class="reveal">
 
             <div class="slides">
-<section>
-    <h2>Some Slide</h2>
+<!--
+                <section data-background="url(images/travis-profile.png)" data-background-repeat="no-repeat" data-background-size="100%">
+                    <h2>Some Slide</h2>
 
-    <aside class="notes">
-        Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-    </aside>
-</section>
-<section>
-    <img class="stretch" src="images/travis-profile.png"></video>
-</section>
+                    <aside class="notes">
+                        Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+                    </aside>
+                </section>
+
+                <section>
+                    <img class="stretch" src="images/travis-profile.png"></video>
+                </section>
+-->
                 <section data-markdown="content.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
             </div>
         </div>
@@ -42,14 +45,28 @@
                 center: false,
                 transition: 'linear', // default/cube/page/concave/zoom/linear/fade/none
 
-                // theme: Reveal.getQueryHash().theme,
-                // transition: Reveal.getQueryHash().transition || 'default',
-
                 dependencies: [
+                    // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
                     { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+
+                    // Interpret Markdown in <section> elements
                     { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
                     { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+
+                    // Syntax highlight for <code> elements
+                    { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+
+                    // Zoom in and out with Alt+click
+                    { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+
+                    // Speaker notes
+                    { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+
+                    // Remote control your reveal.js presentation using a touch device
+                    // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } },
+
+                    // MathJax
+                    // { src: '../reveal.js/plugin/math/math.js', async: true }
                 ]
             });
 
