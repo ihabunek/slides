@@ -5,6 +5,7 @@
 - na jednom mjestu
 - automatizirano testiranje svake izmjene
 - u čistoj okolini
+- kako bi se detektirale greške u integraciji
 
 Note:
 
@@ -15,7 +16,9 @@ Note:
 
 ![Travis CI](images/travis-logo.png)
 
-- hosted CI
+- hosted
+- distribuiran
+- otvorenog kôda
 - besplatan za sve javne projekte na GitHubu
 
 

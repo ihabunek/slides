@@ -1,7 +1,7 @@
 ## Organizacija projekta
 
 ```
-C:\Projects\git\travis-demo
+D:\Projects\travis-demo
 +-- phpunit.xml
 +-- README.md
 |
@@ -77,13 +77,13 @@ class RandomTest extends PHPUnit_Framework_TestCase
 ## Run phpunit
 
 ```
-D:\Projects\git\travis-demo>phpunit
+> phpunit
 ```
 
 ```
 PHPUnit 3.7.21 by Sebastian Bergmann.
 
-Configuration read from D:\Projects\git\travis-demo\phpunit.xml
+Configuration read from D:\Projects\travis-demo\phpunit.xml
 
 .
 

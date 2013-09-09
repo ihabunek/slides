@@ -1,3 +1,15 @@
+## Continuous deployment
+
+- automatski deploy ako prođu testovi
+- podržava: Heroku Nodejitsu OpenShift RubyGems
+
+
+## Preskakanje testova
+
+![ci skip](images/ci-skip.png)
+
+
+
 ## Statusna slika
 
 ```bash
@@ -31,3 +43,8 @@ http://travis-ci.com/
 - http://travis-ci.org/
 - http://getcomposer.org/
 - https://github.com/phpenv/phpenv
+
+---
+
+- https://github.com/hakimel/reveal.js/
+- https://github.com/ihabunek/slides

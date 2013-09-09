@@ -7,9 +7,17 @@
         <title>Travis CI - Ivan Habunek</title>
 
         <link rel="stylesheet" href="../reveal.js/css/reveal.css">
+        <!-- <link rel="stylesheet" href="../reveal.js/css/print/pdf.css"> -->
         <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
         <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
         <link rel="stylesheet" href="style.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            if (window.location.search.match(/print-pdf/gi)) {
+                document.write('<link rel="stylesheet" href="../reveal.js/css/print/pdf.css">');
+            }
+        </script>
     </head>
 
     <body>
@@ -22,7 +30,8 @@
                 <section data-markdown="04_setup.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
                 <section data-markdown="05_configuration.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
                 <section data-markdown="06_pull_requests.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
-                <section data-markdown="07_misc.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
+                <section data-markdown="07_cli_api.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
+                <section data-markdown="08_misc.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
             </div>
         </div>
 
