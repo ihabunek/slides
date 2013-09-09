@@ -16,7 +16,7 @@ D:\Projects\travis-demo
 
 
 
-## Write Code
+## Kôd
 
 ```
 /src/Random.php
@@ -34,9 +34,16 @@ class Random
 }
 ```
 
+<small>http://xkcd.com/221/</small>
+
+Note:
+- minimalan primjer
+- nedostaje napespace
 
 
-## Write tests
+
+
+## Testovi
 
 ```
 /tests/RandomTest.php
@@ -56,6 +63,9 @@ class RandomTest extends PHPUnit_Framework_TestCase
 }
 ```
 
+Note:
+- poklonici Test Driven Developmenta rade obrnuto
+
 
 
 ## Configure PHPUnit
@@ -71,6 +81,10 @@ class RandomTest extends PHPUnit_Framework_TestCase
     </testsuite>
 </phpunit>
 ```
+
+Note:
+- minimalistički pristup
+- nećemo ulaziti u dubinu, nije tema
 
 
 
@@ -91,10 +105,3 @@ Time: 0 seconds, Memory: 2.75Mb
 
 OK (1 test, 1 assertion)
 ```
-
-
-
-## Problemi
-
-- testiranje ovisi o developeru
-- zahtjevno testiranje pull requestova

@@ -21,6 +21,7 @@ Note:
 language: php
 
 php:
+    - 5.2
     - 5.3
     - 5.4
     - 5.5
@@ -28,13 +29,13 @@ php:
 
 
 
-![](images/build-versions.png)
+![Build different versions](images/build-versions.png)
 
 
 
 ## .travis.yml
 
-#### script
+#### script (default)
 
 ```yml
 language: php

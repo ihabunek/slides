@@ -8,9 +8,12 @@ Ivan Habunek
 
 
 
-## O meni
+## Ivan Habunek
 
-- preko 10 godina iskustva u struci
+#### @ihabunek
+
 - voditelj tima razvojnih programera u Zagrebačkoj burzi
+- Apache Software Foundation PMC member
+- preko 10 godina iskustva u struci
 - open source entuzijast
-
+- u strci s vremenom

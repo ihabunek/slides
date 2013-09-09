@@ -7,19 +7,17 @@
 
 
 
-## Service hook
+## Login via GitHub
 
-`https://travis-ci.org/profile`
-
-![Travis Profile](images/travis-profile-off.png)
+![Travis Profile](images/permissions.png)
 
 
 
 ## Service hook
 
-`https://travis-ci.org/profile`
+https://travis-ci.org/profile
 
-![Travis Profile](images/travis-profile-on.png)
+![Travis Profile](images/travis-profile.gif)
 
 
 
@@ -34,6 +32,24 @@ language: php
 Note:
 
 - default verzija PHP 5.3.x
+
+
+
+## Push!
+
+```
+> git push
+```
+
+```
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 777 bytes, done.
+Total 7 (delta 3), reused 0 (delta 0)
+To https://github.com/ihabunek/travis-demo.git
+   8bf4a4d..2cb23eb  master -> master
+```
 
 
 
