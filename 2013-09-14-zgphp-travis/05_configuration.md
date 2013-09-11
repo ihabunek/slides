@@ -4,6 +4,7 @@
 
 ```yml
 language: php
+
 php: 5.4
 ```
 
@@ -27,9 +28,59 @@ php:
     - 5.5
 ```
 
+Note:
+- ovo je super ako na razvojnoj mašini koristite PHP 5.5, za slučaj da
+  iskoristite neku od novih funkcionalnosti koje ne postoje u starijim
 
 
-![Build different versions](images/build-versions.png)
+
+
+![Build versions](images/build-versions.png)
+
+
+
+## Build matrix
+
+```yml
+language: php
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+script: phpunit --configuration etc/$DB.phpunit.xml
+```
+
+
+
+![Build matrix](images/build-matrix.png)
+
+
+
+## Build matrix
+
+9 buildova:
+
+    1. PHP 5.3, DB=postgres (phpunit --configuration etc/postgres.xml)
+    2. PHP 5.3, DB=mysql    (phpunit --configuration etc/mysql.xml)
+    3. PHP 5.3, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
+    4. PHP 5.4, DB=postgres (phpunit --configuration etc/postgres.xml)
+    5. PHP 5.4, DB=mysql    (phpunit --configuration etc/mysql.xml)
+    6. PHP 5.4, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
+    7. PHP 5.5, DB=postgres (phpunit --configuration etc/postgres.xml)
+    8. PHP 5.5, DB=mysql    (phpunit --configuration etc/mysql.xml)
+    9. PHP 5.5, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
+
+Note:
+- evn je niz mogućih okolina, svaka može imati jednu ili više varijabli
+- izvršit će testove za svaku moguću kombinaciju env i php
+
 
 
 
@@ -108,7 +159,8 @@ php:
     - 5.5
 
 before_script:
-    - wget http://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.6.tar.gz
+    - wget http://google-api-php-client.googlecode.com/
+    	files/google-api-php-client-0.6.6.tar.gz
     - mkdir vendor
     - tar xzvf google-api-php-client-0.6.6.tar.gz -C vendor
 ```
@@ -208,82 +260,3 @@ notifications:
     "committer_email": "ivan.habunek@gmail.com"
 }
 ```
-
-
-
-## Build matrix
-
-```yml
-language: php
-
-php:
-    - 5.3
-    - 5.4
-    - 5.5
-```
-
-3 builda:
-
-    1. PHP 5.3
-    2. PHP 5.4
-    3. PHP 5.5
-
-
-
-## Build matrix
-
-```yml
-language: php
-
-env:
-  - BLA=tra
-  - BLA=mrm
-
-php:
-    - 5.3
-    - 5.4
-    - 5.5
-```
-
-6 buildova:
-
-    1. PHP 5.3, BLA=tra
-    2. PHP 5.3, BLA=mrm
-    3. PHP 5.4, BLA=tra
-    4. PHP 5.4, BLA=mrm
-    5. PHP 5.5, BLA=tra
-    6. PHP 5.5, BLA=mrm
-
-Matrica svih mogućih kombinacija.
-
-
-
-## Build matrix
-
-```yml
-language: php
-
-env:
-  - DB=postgres
-  - DB=mysql
-  - DB=sqlite
-
-php:
-    - 5.3
-    - 5.4
-    - 5.5
-
-script: phpunit --configuration etc/$DB.phpunit.xml
-```
-
-9 buildova:
-
-    1. PHP 5.3, DB=postgres (phpunit --configuration etc/postgres.xml)
-    2. PHP 5.3, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    3. PHP 5.3, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
-    4. PHP 5.4, DB=postgres (phpunit --configuration etc/postgres.xml)
-    5. PHP 5.4, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    6. PHP 5.4, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
-    7. PHP 5.5, DB=postgres (phpunit --configuration etc/postgres.xml)
-    8. PHP 5.5, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    9. PHP 5.5, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
