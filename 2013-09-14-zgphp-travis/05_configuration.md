@@ -82,8 +82,35 @@ script: phpunit --configuration tests/phpunit.xml
 #### .travis.yml
 
 ```yml
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
 before_script:
     - composer install
+```
+
+
+
+## Dependancy management
+
+#### .travis.yml
+
+```yml
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+before_script:
+    - wget http://google-api-php-client.googlecode.com/files/google-api-php-client-0.6.6.tar.gz
+    - mkdir vendor
+    - tar xzvf google-api-php-client-0.6.6.tar.gz -C vendor
 ```
 
 
