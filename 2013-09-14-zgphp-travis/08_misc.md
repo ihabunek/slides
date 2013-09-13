@@ -4,6 +4,7 @@
 - podržava: Heroku Nodejitsu OpenShift RubyGems
 
 
+
 ## Preskakanje testova
 
 ![ci skip](images/ci-skip.png)

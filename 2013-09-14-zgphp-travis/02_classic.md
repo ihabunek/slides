@@ -105,3 +105,7 @@ Time: 0 seconds, Memory: 2.75Mb
 
 OK (1 test, 1 assertion)
 ```
+
+Note:
+- znamo da kod radi (100% pokrivenost)
+- dovoljno za 1 osobu

@@ -10,13 +10,14 @@ Note:
 
 - integracija = merge na zajednički branch (npr. master ili develop)
 - rano otkrivanje i eliminacija grešaka
+- prije su ljudi radili cijeli feature, pa imali dugu i kompleksnu integraciju
 
 
 
-## Problemi
+## Ručna provedba CI
 
 - okolina na razvojnom stroju je potencijalno kontaminirana
-- testiranje ovisi o developeru (može ga zaboraviti)
+- testiranje ovisi o developeru ("ma bit će ok" sindrom)
 - zahtjevno testiranje pull requestova
 
 Note:

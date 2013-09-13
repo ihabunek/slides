@@ -34,53 +34,7 @@ Note:
 
 
 
-
 ![Build versions](images/build-versions.png)
-
-
-
-## Build matrix
-
-```yml
-language: php
-
-env:
-  - DB=postgres
-  - DB=mysql
-  - DB=sqlite
-
-php:
-    - 5.3
-    - 5.4
-    - 5.5
-
-script: phpunit --configuration etc/$DB.phpunit.xml
-```
-
-
-
-![Build matrix](images/build-matrix.png)
-
-
-
-## Build matrix
-
-9 buildova:
-
-    1. PHP 5.3, DB=postgres (phpunit --configuration etc/postgres.xml)
-    2. PHP 5.3, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    3. PHP 5.3, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
-    4. PHP 5.4, DB=postgres (phpunit --configuration etc/postgres.xml)
-    5. PHP 5.4, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    6. PHP 5.4, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
-    7. PHP 5.5, DB=postgres (phpunit --configuration etc/postgres.xml)
-    8. PHP 5.5, DB=mysql    (phpunit --configuration etc/mysql.xml)
-    9. PHP 5.5, DB=sqlite   (phpunit --configuration etc/sqlite.xml)
-
-Note:
-- evn je niz mogućih okolina, svaka može imati jednu ili više varijabli
-- izvršit će testove za svaku moguću kombinaciju env i php
-
 
 
 
@@ -99,6 +53,9 @@ php:
 script: phpunit
 ```
 
+Note:
+- script: koju će komandu pozvati za izvršavanje testova
+
 
 
 ## .travis.yml
@@ -113,8 +70,94 @@ php:
     - 5.4
     - 5.5
 
-script: phpunit --configuration tests/phpunit.xml
+script: phpunit --configuration etc/phpunit.xml
 ```
+
+
+
+## .travis.yml
+
+#### script
+
+```yml
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+script: ./bin/build.sh
+```
+
+
+
+## Testiranje u više okolina
+
+```
+D:\Projects\travis-demo
++-- phpunit.xml
++-- README.md
+|
++---etc
+|   +-- postgres.phpunit.xml
+|   +-- mysql.phpunit.xml
+|   \-- sqlite.phpunit.xml
+|
++---src
+|   \-- Random.php
+|
+\---tests
+    \-- RandomTest.php
+```
+
+
+
+## Build matrix
+
+```yml
+language: php
+
+env:
+    - DB=postgres
+    - DB=mysql
+    - DB=sqlite
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+script: phpunit --configuration etc/$DB.phpunit.xml
+```
+
+Note:
+- env je niz mogućih okolina, svaka može imati jednu ili više varijabli
+- izvršit će testove za svaku moguću kombinaciju env i php
+
+
+
+![Build matrix](images/build-matrix.png)
+
+
+
+## Scripts
+
+```
+before script: echo "Zdravo svijete"
+
+after_script:
+    - echo "Tako mi mlijeka u prahu"
+    - echo "Gibam nalijevo"
+
+after_success: echo "Oh yess!"
+
+after_faulure: echo "Oh noes!"
+```
+
+Note:
+    - svaki hook sadrži jednu ili više shell naredbi
+    - ovo nisu sve, nema vremena, vidi doksu
 
 
 
@@ -146,7 +189,20 @@ before_script:
 
 
 
-## Dependancy management
+## PECL
+
+#### .travis.yml
+
+```yml
+before_script:
+    - pecl install oauth
+```
+
+![pecl install](images/pecl-install.png)
+
+
+
+## Ručna instalacija
 
 #### .travis.yml
 
@@ -160,10 +216,13 @@ php:
 
 before_script:
     - wget http://google-api-php-client.googlecode.com/
-    	files/google-api-php-client-0.6.6.tar.gz
+        files/google-api-php-client-0.6.6.tar.gz
     - mkdir vendor
     - tar xzvf google-api-php-client-0.6.6.tar.gz -C vendor
 ```
+
+Note:
+- može se verzija zamijeniti sa environment varijablom
 
 
 
