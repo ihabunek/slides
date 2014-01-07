@@ -244,10 +244,12 @@ $password = 'zgphprules';
 // From database
 $hash = '$2y$10$voUu8Q3uJXrZqjotlZ81GeYCL0ztmQBewg7HS35EBXwE97FPMaE6i';
 
-password_verify($password, $hash);
+if (password_verify($password, $hash)) {
+  echo "In you go."
+} else {
+  throw new Exception("Sod off");
+}
 ```
-
-* Returns true/false
 
 
 
