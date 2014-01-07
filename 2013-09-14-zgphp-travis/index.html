@@ -6,22 +6,21 @@
 
         <title>Travis CI - Ivan Habunek</title>
 
-        <link rel="stylesheet" href="../reveal.js/css/reveal.css">
-        <link rel="stylesheet" href="../reveal.js/css/theme/default.css" id="theme">
-        <link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/reveal.css">
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/theme/default.css" id="theme">
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/lib/css/zenburn.css">
         <link rel="stylesheet" href="style.css">
 
         <!-- If the query includes 'print-pdf', use the PDF print sheet -->
         <script>
             if (window.location.search.match(/print-pdf/gi)) {
-                document.write('<link rel="stylesheet" href="../reveal.js/css/print/pdf.css">');
+                document.write('<link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/print/pdf.css">');
             }
         </script>
     </head>
 
     <body>
         <div class="reveal">
-
             <div class="slides">
                 <section data-markdown="01_intro.md" data-separator="^\n\r?\n\r?\n\r?" data-vertical="^\n\r?\n\r?"></section>
                 <section data-markdown="02_classic.md" data-separator="^\n\r?\n\r?\n\r?" data-vertical="^\n\r?\n\r?"></section>
@@ -34,8 +33,8 @@
             </div>
         </div>
 
-        <script src="../reveal.js/lib/js/head.min.js"></script>
-        <script src="../reveal.js/js/reveal.js"></script>
+        <script src="../lib/reveal.js-2.6.1/lib/js/head.min.js"></script>
+        <script src="../lib/reveal.js-2.6.1/js/reveal.js"></script>
 
         <script>
             Reveal.initialize({
@@ -48,26 +47,26 @@
 
                 dependencies: [
                     // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
-                    { src: '../reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: '../lib/reveal.js-2.6.1/lib/js/classList.js', condition: function() { return !document.body.classList; } },
 
                     // Interpret Markdown in <section> elements
-                    { src: '../reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: '../reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 
                     // Syntax highlight for <code> elements
-                    { src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 
                     // Zoom in and out with Alt+click
-                    { src: '../reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
 
                     // Speaker notes
-                    { src: '../reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
 
                     // Remote control your reveal.js presentation using a touch device
-                    // { src: '../reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } },
+                    // { src: '../lib/reveal.js-2.6.1/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } },
 
                     // MathJax
-                    // { src: '../reveal.js/plugin/math/math.js', async: true }
+                    // { src: '../lib/reveal.js-2.6.1/plugin/math/math.js', async: true }
                 ]
             });
 
