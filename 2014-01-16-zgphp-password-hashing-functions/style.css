@@ -1,0 +1,5 @@
+.reveal section img { background: none; border: 0; box-shadow: none }
+
+.reveal li { margin-top: 0.5em; }
+
+.reveal pre code { overflow-x: hidden; padding: 15px; }

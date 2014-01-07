@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+
+        <title>Password hashing functions - Ivan Habunek</title>
+
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/reveal.css">
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/theme/blood.css" id="theme">
+        <link rel="stylesheet" href="../lib/reveal.js-2.6.1/lib/css/zenburn.css">
+        <link rel="stylesheet" href="style.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            if (window.location.search.match(/print-pdf/gi)) {
+                document.write('<link rel="stylesheet" href="../lib/reveal.js-2.6.1/css/print/pdf.css">');
+            }
+        </script>
+    </head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section data-markdown="contents.md" data-separator="^\n\r?\n\r?\n\r?" data-vertical="^\n\r?\n\r?"></section>
+            </div>
+        </div>
+
+        <script src="../lib/reveal.js-2.6.1/lib/js/head.min.js"></script>
+        <script src="../lib/reveal.js-2.6.1/js/reveal.js"></script>
+
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                keyboard: true,
+                center: true,
+                // transition: 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+                dependencies: [
+                    { src: '../lib/reveal.js-2.6.1/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: '../lib/reveal.js-2.6.1/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                ]
+            });
+        </script>
+    </body>
+</html>
