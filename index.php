@@ -50,7 +50,7 @@ foreach(scandir(__DIR__) as $file) {
     <h3><a href="<?= $talk->dir ?>"><?= $talk->title ?></a></h3>
     <p>
         <?= $talk->description ?><br />
-        <?= $talk->location ?>
+        <?= $talk->date ?>, <?= $talk->location ?>
     </p>
 
     <?php } ?>
