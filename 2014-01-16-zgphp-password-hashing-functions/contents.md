@@ -1,14 +1,14 @@
-# Password hashing functions
+## Password hashing functions
 
 <hr />
 
-## Ivan Habunek
+### Ivan Habunek
 
-### @ihabunek
+#### @ihabunek
 
 <hr />
 
-## ZgPHP Meetup 16.01.2014.
+### ZgPHP Meetup 17.04.2014.
 
 
 
@@ -17,6 +17,10 @@
 ```php
 string crypt ( string $str [, string $salt ] )
 ```
+
+
+
+### "Salt"
 
 `$salt` determines the algorithm:
 
@@ -29,12 +33,12 @@ string crypt ( string $str [, string $salt ] )
 
 
 
-### DES
+### Standard DES
 
 <small>Data Encryption Standard</small>
 
 ```php
-crypt('zgphprules', 'XX')
+echo crypt('zgphprules', 'XX');
 ```
 
 ```
@@ -42,14 +46,14 @@ XXafed7kmVc6I
 ```
 
 * $salt - two character of salt
-
+* short key length, considered unsafe
 
 
 
 ### Extended DES
 
 ```php
-crypt('zgphprules', '_J9..salt')
+echo crypt('zgphprules', '_J9..salt');
 ```
 
 ```
@@ -60,10 +64,13 @@ _J9..saltBaTWhT6gQoc
     * an underscore
     * 4 bytes of iteration count
     * 4 bytes of salt
+* short key length, considered unsafe
 
 
 
 ### Extended DES
+
+#### Iteration count
 
 > These are encoded as printable characters, 6 bits per character, least
 > significant character first. The values 0 to 63 are encoded as `./0-9A-Za-z`.
@@ -80,7 +87,7 @@ _J9..saltBaTWhT6gQoc
 ### MD5
 
 ```php
-crypt('zgphprules', '$1$saltyphp$')
+echo crypt('zgphprules', '$1$saltyphp$');
 ```
 
 ```
@@ -90,18 +97,20 @@ $1$saltyphp$EFZQyVvbLGNqYX0KtkFQm.
 * `$salt`
     * Starts with `$1$`
     * 8 characters salt
+* not cryptographically secure
+* too fast, can be bruteforced
 
 
 
 ### SHA256
 
 ```php
-crypt('zgphprules', '$5$rounds=50000$saltyphpelephant$')
+echo crypt('zgphprules', '$5$rounds=5000$saltyphpelephant$');
 ```
 
 ```
-$5$rounds=50000$saltyphpelephant$
-B2ieA3FbPMy5t0pFLg2s/ydoX9eNY7.TDQ2EwmNq3CD
+$5$rounds=5000$saltyphpelephant$
+x0Ppf6aWyRVva1xbhdC/1/kyAVje3LV65wZAwmH38A3
 ```
 
 * `$salt`
@@ -114,13 +123,13 @@ B2ieA3FbPMy5t0pFLg2s/ydoX9eNY7.TDQ2EwmNq3CD
 ### SHA512
 
 ```php
-crypt('zgphprules', '$6$rounds=50000$saltyphpelephant$')
+echo crypt('zgphprules', '$6$rounds=5000$saltyphpelephant$');
 ```
 
 ```
-$6$rounds=50000$saltyphpelephant$
-Tot2XNPYyQsG..bDp5gF/2QAdcHsVaRUktQs4/QHUA9
-rSBYS9Bv8g4/uPYgiQDgWjx0hjap3Q1zsB63mtluGu1
+$6$rounds=5000$saltyphpelephant$
+HLJIcTsP7Ih1V0YNY/I0Hsrd1F2y/G7QhETdRx10ton
+SmuZ9XXE7R0MktSHGJ13UgK2/pOxqtrHOfN7scgL3x0
 ```
 
 * `$salt`
@@ -133,17 +142,19 @@ rSBYS9Bv8g4/uPYgiQDgWjx0hjap3Q1zsB63mtluGu1
 ### Bcrypt (Blowfish)
 
 ```php
-crypt('zgphprules', '$2y$07$saltyphpelephantwins$')
+echo crypt('zgphprules', '$2y$07$saltyphpelephantwins$');
 ```
 
 ```
-$2a$07$saltyphpelephantwins$enUZQQrMTEUxVU8w0B01h1O/4vNNJiN2
+$2y$07$saltyphpelephantwins$enUZQQrMTEUxVU8w0B01h1O/4vNNJiN2
 ```
 
 * `$salt`
     * starts with `$2a$`, `$2x$` or `$2y$`
     * a two digit cost parameter
     * 16 characters salt
+* established, proven
+* expensive to brute force
 
 
 
@@ -152,7 +163,7 @@ $2a$07$saltyphpelephantwins$enUZQQrMTEUxVU8w0B01h1O/4vNNJiN2
 Cost `7` instead of `07`.
 
 ```php
-crypt('zgphprules', '$2y$7$saltyphpelephantwins$')
+echo crypt('zgphprules', '$2y$7$saltyphpelephantwins$');
 ```
 
 ```
@@ -168,7 +179,7 @@ $2GR95JaY.7oY
 Salt shorter than 20 characters.
 
 ```php
-crypt('zgphprules', '$2y$07$salty$')
+echo crypt('zgphprules', '$2y$07$salty$');
 ```
 
 ```
@@ -184,7 +195,7 @@ $2y$07$salty$
 Invalid characters in salt.
 
 ```php
-crypt('zgphprules', '$2y$07$!!!!!!$')
+echo crypt('zgphprules', '$2y$07$!!!!!!$');
 ```
 
 ```
@@ -207,22 +218,24 @@ string password_hash(string $password, integer $algo [, array $options ])
 boolean password_verify(string $password , string $hash)
 ```
 
+Introduced in PHP 5.5
 
 
-## Available algorithms:
+
+## Available algorithms
 
 * `PASSWORD_BCRYPT`<br />
   the Blowfish algorithm
 
 * `PASSWORD_DEFAULT`<br />
-  the default algorithm (also Blowfish)
+  the default algorithm (`PASSWORD_BCRYPT`)
 
 
 
 ## Hash password
 
 ```php
-password_hash('zgphprules', PASSWORD_DEFAULT)
+echo password_hash('zgphprules', PASSWORD_DEFAULT);
 ```
 
 ```
@@ -230,8 +243,8 @@ $2y$10$voUu8Q3uJXrZqjotlZ81GeYCL0ztmQBewg7HS35EBXwE97FPMaE6i
 ```
 
 * strong algorithm
-* random salt generation
-* cost set to 10
+* automatic random salt
+* cost set to 10 by default
 
 
 
@@ -292,7 +305,9 @@ Warning: password_hash(): Invalid bcrypt cost parameter specified: 2
 
 
 
-## But I can't use PHP 5.5 :(
+### But I can't use PHP 5.5 :(
+
+
 
 Community has you covered.
 
