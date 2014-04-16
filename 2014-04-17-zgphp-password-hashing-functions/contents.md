@@ -319,6 +319,8 @@ Thank you Anthony Ferrara (@ircmaxell)
 
 # Questions?
 
+Please rate my talk
+
 https://joind.in/talk/view/11197
 
 
