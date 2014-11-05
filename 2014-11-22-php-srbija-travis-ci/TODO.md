@@ -1,0 +1,7 @@
+- coveralls.io
+- badges
+- continuous deployment
+- outline all .travis.yml keys
+- Travis Web Lint: http://yaml.travis-ci.org/
+- commit your composer.lock to speed up testing
+- PHP defaults: https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/script/php.rb

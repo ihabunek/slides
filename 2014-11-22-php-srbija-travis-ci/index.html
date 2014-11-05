@@ -4,24 +4,705 @@
     <title>Travis CI - Ivan Habunek</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <style type="text/css">
+
         @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
         @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
         @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-        body { font-family: 'Droid Serif'; }
-        h1, h2, h3 {
-            font-family: 'Yanone Kaffeesatz';
+        body { font-family: 'Droid Serif', Helvetica, Arial, sans-serif }
+        h1, h2, h3, h4, h5 {
+            font-family: 'Yanone Kaffeesatz', Helvetica, Arial, sans-serif;
             font-weight: normal;
         }
-        .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+        .remark-code, .remark-inline-code {
+            font-family: 'Ubuntu Mono', Consolas, Courier new, monospace;
+        }
+        .small-code .remark-code {
+            text-size: 18px !important;
+        }
+        .remark-code {
+            font-size: 26px;
+        }
+        .remark-slide-content {
+            font-size: 24px;
+        }
+        .remark-notes, .remark-notes-preview {
+            font-size: 28px;
+        }
+        blockquote {
+            text-align: justify;
+        }
     </style>
 </head>
 <body>
-    <script type="text/javascript" src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <textarea id="source">
+
+class: center, middle
+
+![Travis CI](images/travis-logo.png)
+
+## Testing open source projects
+
+## Ivan Habunek
+
+PHP T-Day, Belgrade, 22.11.2014
+
+---
+
+class: center, middle
+
+## Ivan Habunek
+
+### @ihabunek
+
+***Big Fish Software*** Developer and owner
+
+***WebCamp Zagreb*** Co-organizer
+
+***ZgPHP meetups*** Co-organizer
+
+***Apache Software Foundation*** Commiter and PMC member
+
+Open source enthusiast
+
+---
+
+## The code
+
+```sh
+/src/Random.php
+```
+
+```php
+class Random
+{
+    public function getRandomNumber()
+    {
+        // Choosen by a fair dice roll.
+        // Guaranteed to be random.
+        return 4;
+    }
+}
+```
+
+<small>http://xkcd.com/221/</small>
+
+???
+
+- minimalan primjer
+- nedostaje napespace
+
+---
+
+## The test
+
+```sh
+/tests/RandomTest.php
+```
+
+```php
+class RandomTest extends PHPUnit_Framework_TestCase
+{
+    public function testGetRandomNumber()
+    {
+        $random = new Random();
+        $actual = $random->getRandomNumber();
+        $this->assertSame(4, $actual);
+    }
+}
+```
+
+???
+
+- Test Driven Development afficionados do it the other way around
+
+---
+
+## Run phpunit
+
+```sh
+> phpunit
+```
+
+```sh
+PHPUnit 3.7.21 by Sebastian Bergmann.
+
+Configuration read from phpunit.xml
+
+.
+
+Time: 0 seconds, Memory: 2.75Mb
+
+OK (1 test, 1 assertion)
+```
+
+???
+
+---
+
+## Good enough?
+
+--
+
+* Well, maybe...
+
+--
+
+* If you're very self-disciplined
+
+--
+
+* If you work on a project alone
+
+--
+
+* If you're sure your local environment is identical to staging / production
+
+--
+
+* If you run tests on all supported versions of PHP.
+
+--
+
+* Maybe not
+
+---
+
+## Continuous Integration
+
+> Continuous Integration is a software development practice where members of a
+> team integrate their work frequently, usually each person integrates at least
+> daily, leading to multiple integrations per day. Each integration is verified
+> by an automated build (including test) to detect integration errors as quickly
+> as possible.
+
+Martin Fowler (2006)
+
+`http://www.martinfowler.com/articles/continuousIntegration.html`
+
+???
+
+- integration is a merge to a central branch (npr. master ili develop)
+- early detection of errors => early fixing of errors
+- contrast to doing long arduous merges after implementing a huge feature
+
+---
+
+class: center
+
+![Travis CI](images/travis-logo.png)
+
+## A hosted continuous integration service for the open source community
+
+---
+
+class: center
+
+![Travis CI](images/travis-logo.png)
+
+## Supported runtimes
+
+Android&nbsp;&nbsp;&nbsp;&nbsp;
+C&nbsp;&nbsp;&nbsp;&nbsp;
+C++&nbsp;&nbsp;&nbsp;&nbsp;
+Clojure&nbsp;&nbsp;&nbsp;&nbsp;
+Erlang&nbsp;&nbsp;&nbsp;&nbsp;
+Go&nbsp;&nbsp;&nbsp;&nbsp;
+Groovy&nbsp;&nbsp;&nbsp;&nbsp;
+
+Haskell&nbsp;&nbsp;&nbsp;&nbsp;
+Java&nbsp;&nbsp;&nbsp;&nbsp;
+JavaScript&nbsp;&nbsp;&nbsp;&nbsp;
+Node.js&nbsp;&nbsp;&nbsp;&nbsp;
+Objective-C&nbsp;&nbsp;&nbsp;&nbsp;
+
+Perl&nbsp;&nbsp;&nbsp;&nbsp;
+**PHP**&nbsp;&nbsp;&nbsp;&nbsp;
+Python&nbsp;&nbsp;&nbsp;&nbsp;
+Ruby&nbsp;&nbsp;&nbsp;&nbsp;
+Scala&nbsp;&nbsp;&nbsp;&nbsp;
+
+---
+
+class: center
+
+![Travis CI](images/travis-logo.png)
+
+## Preinstalled services
+
+MySQL&nbsp;&nbsp;&nbsp;
+PostgreSQL&nbsp;&nbsp;&nbsp;
+MongoDB&nbsp;&nbsp;&nbsp;
+CouchDB&nbsp;&nbsp;&nbsp;
+Redis&nbsp;&nbsp;&nbsp;
+
+Riak&nbsp;&nbsp;&nbsp;
+RabbitMQ&nbsp;&nbsp;&nbsp;
+Memcached&nbsp;&nbsp;&nbsp;
+Cassandra&nbsp;&nbsp;&nbsp;
+
+Neo4J&nbsp;&nbsp;&nbsp;
+ElasticSearch&nbsp;&nbsp;&nbsp;
+Kestrel&nbsp;&nbsp;&nbsp;
+SQLite3&nbsp;&nbsp;&nbsp;
+
+---
+
+## Setup
+
+1. Login via GitHub
+2. Service hook
+3. `.travis.yml`
+4. Push
+
+---
+
+## Login via GitHub
+
+![Travis Profile](images/permissions.png)
+
+---
+
+background-image: url(images/travis-hook.gif)
+
+---
+
+## .travis.yml
+
+```sh
+language: php
+```
+
+---
+
+## Push!
+
+```sh
+> git push
+```
+
+```sh
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 777 bytes, done.
+Total 7 (delta 3), reused 0 (delta 0)
+To https://github.com/ihabunek/travis-demo.git
+   8bf4a4d..2cb23eb  master -> master
+```
+
+---
+
+## Build
+
+https://travis-ci.org/ihabunek/travis-demo
+
+![Single build](images/single-build-1.png)
+
+---
+
+## Build
+
+![Single build](images/single-build-2.png)
+
+---
+
+## Build history
+
+![Single build](images/build-history.png)
+
+---
+
+`.travis.yml`
+
+```sh
+language: php
+```
+
+???
+
+Let's talk a little about configuration.
+
+This is a basic configuration.
+
+---
+
+`.travis.yml`
+
+```sh
+language: php
+
+php: 5.5
+
+script: phpunit
+```
+
+???
+
+Travis has sensible defaults
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+```
+
+---
+
+background-image: url(images/build-versions.png)
+
+???
+
+Test compatibility on multiple versions.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+script: phpunit
+```
+
+???
+
+Use the 'script' parameter to tell Travis how to run your test suite.
+
+It holds one or more bash commands.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+script: phpunit --coverage-html target/coverage
+```
+
+???
+
+You can change it to customize phpunit options.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+script: vendor/bin/atoum
+```
+
+???
+
+To run other test frameworks.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+script: ./bin/test.sh
+```
+
+???
+
+Or to run your custom test runner script.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+```
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+install: composer install
+```
+
+???
+
+If you use Composer (and you do), use the "install" setting to install your
+dependencies.
+
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+install:
+    - composer install
+    - pecl install oauth
+```
+
+???
+
+Also use it to install any other extensions and prerequisites which are not
+available by default on Travis.
+
+---
+
+`.travis.yml`
+
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+install:
+    - composer install
+    - pecl install oauth
+    - apt-get -y install solr
+```
+
+---
+
+`.travis.yml`
+
+```sh
+language: php
+
+php:
+    - 5.4
+    - 5.5
+    - 5.6
+    - hhvm
+
+env:
+    - DB=postgres
+    - DB=mysql
+    - DB=sqlite
+
+script: phpunit --configuration $DB.phpunit.xml
+```
+
+???
+
+- Integration tests.
+- Sets environment variables.
+
+---
+
+background-image: url(images/build-matrix.png)
+
+---
+
+- TODO: scripts
+
+---
+
+
+`.travis.yml`
+
+```yml
+notifications:
+    email:
+        - ivan.habunek@gmail.com
+        - ivan@bezdomni.net
+```
+
+---
+
+
+`.travis.yml`
+
+```yml
+notifications:
+    irc:
+        - "irc.freenode.org#zgphp"
+```
+
+--
+
+![IRC notification](images/notify-irc.png)
+
+---
+
+background-image: url(images/what-year.jpg)
+
+---
+
+
+`.travis.yml`
+
+```yml
+notifications:
+    campfire: [subdomain]:[api_token]@[room]
+    flowdock: [api_token]
+    hipchat:  [api_token]@[room]
+    sqwiggle: [api_token]@[room]
+    slack:    [account]:[token]#[channel]
+```
+
+---
+
+`.travis.yml`
+
+```yml
+notifications:
+    webhooks:
+        urls:
+            - http://bezdomni.net/hooks/travis
+```
+
+---
+
+class: small-code
+
+```json
+{
+    "id": 11127910,
+    "repository": {
+        "id": 1220417,
+        "name": "travis-demo",
+        "owner_name": "ihabunek",
+        "url": "https:\/\/github.com\/ihabunek\/travis-demo"
+    },
+    "number": "25",
+    "config": {
+        "language": "php",
+        "php": [
+            5.3,
+            5.4,
+            5.5
+        ],
+        "before_script": [
+            "composer self-update",
+            "composer install"
+        ],
+        "notifications": {
+            "webhooks": {
+                "urls": [
+                    "http:\/\/bezdomni.net\/travis.php"
+                ],
+                "on_success": "always",
+                "on_failure": "always",
+                "on_start": true
+            },
+            "irc": [
+                "chat.freenode.net#zgphp"
+            ]
+        },
+        ".result": "configured"
+    },
+    "status": 1,
+    "result": 1,
+    "status_message": "Pending",
+    "result_message": "Pending",
+    "started_at": "2013-09-08T18:25:28Z",
+    "finished_at": null,
+    "duration": null,
+    "build_url": "https:\/\/travis-ci.org\/ihabunek\/travis-demo\/builds\/11127910",
+    "commit": "fb757c43a96f6cf8886d612943da57a9c06a616c",
+    "branch": "master",
+    "message": "Testing IRC notifications",
+    "compare_url": "https:\/\/github.com\/ihabunek\/travis-demo\/compare\/59cfd34c860a...fb757c43a96f",
+    "committed_at": "2013-09-08T18:24:57Z",
+    "author_name": "Ivan Habunek",
+    "author_email": "ivan.habunek@gmail.com",
+    "committer_name": "Ivan Habunek",
+    "committer_email": "ivan.habunek@gmail.com"
+}
+```
+
+---
+
+class: center, middle
+
+## Questions?
+
+Please rate my talk
+
+![Rate my talk](images/qrcode.png)
+
+`https://joind.in/12413`
+
+## References
+
+* Borat meme: `http://www.quickmeme.com/meme/3sufea`
+
+    </textarea>
+
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var slideshow = remark.create({
-            sourceUrl: '2014-11-22-php-srbija-travis-ci/content.md'
-        });
+      var slideshow = remark.create();
     </script>
 </body>
 </html>
