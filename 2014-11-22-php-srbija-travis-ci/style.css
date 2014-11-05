@@ -1,0 +1,37 @@
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body { font-family: 'Droid Serif', Helvetica, Arial, sans-serif }
+h1,h2,h3,h4,h5 { font-family: 'Yanone Kaffeesatz', Helvetica, Arial, sans-serif; font-weight: normal }
+td { padding: 4px 10px }
+blockquote { text-align: justify }
+
+.remark-code,
+.remark-inline-code { font-family: 'Ubuntu Mono', Consolas, Courier new, monospace }
+.remark-code { font-size: 26px }
+.remark-slide-content { font-size: 24px }
+
+.code16 { font-size: 16px }
+.code20 { font-size: 20px }
+.code16 .hljs-keyword,
+.code20 .hljs-keyword { font-weight: normal }
+
+.text16 { font-size: 20px }
+.text16 .remark-code-line { font-size: 20px }
+
+.none .hljs-comment,
+.none .hljs-decorator,
+.none .hljs-id,
+.none .hljs-keyword,
+.none .hljs-number,
+.none .hljs-pseudo,
+.none .hljs-tag { color: black; font-weight: normal !important }
+
+.remark-notes,
+.remark-notes-preview { font-size: 28px }
+
+.left-column { float: left }
+.right-column { float: right }
+.left-column,
+.right-column { width: 50%; padding-top: 1em }
