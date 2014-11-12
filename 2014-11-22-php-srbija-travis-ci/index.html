@@ -14,14 +14,20 @@
             font-family: 'Yanone Kaffeesatz', Helvetica, Arial, sans-serif;
             font-weight: normal;
         }
+        td {
+            padding: 4px 10px;
+        }
         .remark-code, .remark-inline-code {
             font-family: 'Ubuntu Mono', Consolas, Courier new, monospace;
         }
         .remark-code {
             font-size: 26px;
         }
-        .small-code > pre > .remark-code {
-            text-size: 18px !important;
+        .code16 {
+            font-size: 16px;
+        }
+        .code20 {
+            font-size: 20px;
         }
         .remark-slide-content {
             font-size: 24px;
@@ -148,7 +154,7 @@ OK (1 test, 1 assertion)
 
 --
 
-* If you're very self-disciplined
+* If you're self-disciplined
 
 --
 
@@ -156,11 +162,19 @@ OK (1 test, 1 assertion)
 
 --
 
-* If you're sure your local environment is identical to staging / production
+* If your environment is identical to production
+
+???
+
+If the build passes on your computer, will it work on production?
 
 --
 
-* If you run tests on all supported versions of PHP.
+* If you support only one version of PHP
+
+--
+
+* If you support only one database
 
 --
 
@@ -182,9 +196,17 @@ Martin Fowler (2006)
 
 ???
 
-- integration is a merge to a central branch (npr. master ili develop)
+* integration is a merge to a central branch (e.g. develop)
+* integrate often
+* run automated tests
+* early error detection
+
 - early detection of errors => early fixing of errors
 - contrast to doing long arduous merges after implementing a huge feature
+
+---
+
+background-image: url(images/octocat.jpg)
 
 ---
 
@@ -193,6 +215,10 @@ class: center
 ![Travis CI](images/travis-logo.png)
 
 ## A hosted continuous integration service for the open source community
+
+???
+
+* Runs your tests every time you push code to GitHub
 
 ---
 
@@ -297,6 +323,10 @@ background-image: url(images/single-build.png)
 
 background-image: url(images/build-history.png)
 
+???
+
+* Keeps history of all your failures
+
 ---
 
 class: center, middle
@@ -348,13 +378,26 @@ php:
     - hhvm
 ```
 
+???
+
+* Runs tests once for every version specified
+
 ---
 
 background-image: url(images/build-versions.png)
 
-???
+---
 
-Test compatibility on multiple versions.
+# Scripts
+
+&nbsp;                |  &nbsp;
+--------------- | ------------------------------------
+`install`       | Installs dependencies
+`before_script` | Sets up build
+`script`        | Runs the tests
+`after_success` | Runs if build was successful
+`after_failure` | Runs if build failed
+`after`         | Runs after build always
 
 ---
 
@@ -556,10 +599,6 @@ background-image: url(images/build-matrix.png)
 
 ---
 
-- TODO: scripts
-
----
-
 
 `.travis.yml`
 
@@ -616,9 +655,11 @@ notifications:
 
 ---
 
-class: small-code
+```sh
+POST /hooks/travis
+```
 
-```json
+```code16
 {
     "id": 11127910,
     "repository": {
@@ -704,67 +745,144 @@ background-image: url(images/pull-success.png)
 
 Great success.
 
+???
+
+TODO: borat?
+
 ---
 
 class: center middle
 
 # API
 
----
+???
 
-`https://api.travis-ci.org/`
-
-- HTTP + JSON
-- travis-ci.org
-- travis CLI
+Standard REST + JSON
 
 ---
 
 ```sh
-GET https://api.travis-ci.org/builds/11127910
+GET /repos/ihabunek/travis-demo
 ```
 
-```sh
+```code16
 {
-    "build": {
-        "id": 11127910,
-        "repository_id": 1220417,
-        "commit_id": 3266048,
-        "number": "25",
-        "pull_request": false,
-        "state": "passed",
-        "started_at": "2013-09-08T18:25:28Z",
-        "finished_at": "2013-09-08T18:26:03Z",
-        "duration": 68,
-        ...
-    },
-    "commit": {
-        "id": 3266048,
-        "sha": "fb757c43a96f6cf8886d612943da57a9c06a616c",
-        "branch": "master",
-        "message": "Testing IRC notifications",
-        "committed_at": "2013-09-08T18:24:57Z",
-        "author_name": "Ivan Habunek",
-        "author_email": "ivan.habunek@gmail.com",
-        "committer_name": "Ivan Habunek",
-        "committer_email": "ivan.habunek@gmail.com",
-        "compare_url": "https:\/\/github.com\/ihabunek\/travis-demo\/compare\/59cfd34c860a...fb757c43a96f"
-    }
-    ...
+  "id": 1220417,
+  "slug": "ihabunek/travis-demo",
+  "description": "Travis demo",
+  "public_key": "-----BEGIN RSA PUBLIC KEY-----\n...",
+  "last_build_id": 39745461,
+  "last_build_number": "31",
+  "last_build_status": 0,
+  "last_build_result": 0,
+  "last_build_duration": 20,
+  "last_build_language": null,
+  "last_build_started_at": "2014-11-02T13:04:47Z",
+  "last_build_finished_at": "2014-11-02T13:05:22Z"
 }
 ```
 
 ---
 
-```none
+```sh
+GET /repos/ihabunek/travis-demo/builds
+```
+
+```code16
+[
+  {
+    "id": 39745461,
+    "repository_id": 1220417,
+    "number": "31",
+    "state": "finished",
+    "result": 0,
+    "started_at": "2014-11-02T13:04:47Z",
+    "finished_at": "2014-11-02T13:05:22Z",
+    "duration": 20,
+    "commit": "b27189f256ea5da81feadc5727be63c410668bf4",
+    "branch": "master",
+    "message": "Test multiple version",
+    "event_type": "push"
+  },
+  {
+    "id": 39742247,
+    "repository_id": 1220417,
+    "number": "30",
+    "state": "finished",
+    "result": 0,
+    "started_at": "2014-11-02T12:08:04Z",
+    "finished_at": "2014-11-02T12:08:10Z",
+    "duration": 6,
+    "commit": "424e9f6ab3822776ba6815b31fdd690577fbd5bc",
+    "branch": "master",
+    "message": "Test no version",
+    "event_type": "push"
+  },
+  ...
+]
+```
+
+---
+
+```sh
+GET /repos/ihabunek/travis-demo/builds/39745461
+```
+
+```code16
+{
+  "id": 39745461,
+  "repository_id": 1220417,
+  "number": "31",
+  "config": {
+    "language": "php",
+    "php": [
+      5.4,
+      5.5,
+      5.6,
+      "hhvm"
+    ],
+    ".result": "configured",
+    "os": "linux"
+  },
+  "state": "finished",
+  "result": 0,
+  "status": 0,
+  "started_at": "2014-11-02T13:04:47Z",
+  "finished_at": "2014-11-02T13:05:22Z",
+  "duration": 20,
+  "commit": "b27189f256ea5da81feadc5727be63c410668bf4",
+  "branch": "master",
+  "message": "Test multiple version",
+  "committed_at": "2014-11-02T13:04:12Z",
+  "author_name": "Ivan Habunek",
+  "author_email": "ivan.habunek@gmail.com",
+  "committer_name": "Ivan Habunek",
+  "committer_email": "ivan.habunek@gmail.com",
+  "compare_url": "https://github.com/ihabunek/travis-demo/compare/424e9f6ab382...b27189f256ea",
+  "event_type": "push",
+  "matrix": [
+  ...`
+```
+
+---
+
+class: center middle
+
+# CLI
+
+---
+
+```sh
 > gem install travis
 ```
 
-```none
+---
+
+```sh
 > travis help
 ```
 
-```none
+```code20
 Available commands:
 
 accounts  displays accounts and their subscription status
@@ -797,11 +915,11 @@ whoami    outputs the current user
 
 ---
 
-```none
+```sh
 > travis history
 ```
 
-```none
+```code20
 #25 passed:     master Testing IRC notifications
 #21 passed:     master Testing notifications
 #20 passed:     master Removed testing on 5.2
