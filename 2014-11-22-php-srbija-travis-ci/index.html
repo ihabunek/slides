@@ -29,6 +29,19 @@
         .code20 {
             font-size: 20px;
         }
+        .code16 .hljs-keyword,
+        .code20 .hljs-keyword {
+            font-weight: normal;
+        }
+        .none .hljs-comment,
+        .none .hljs-id,
+        .none .hljs-keyword,
+        .none .hljs-number,
+        .none .hljs-pseudo,
+        .none .hljs-tag {
+            color: black;
+            font-weight: normal !important;
+        }
         .remark-slide-content {
             font-size: 24px;
         }
@@ -75,7 +88,7 @@ Open source enthusiast
 
 ## The code
 
-```sh
+```none
 /src/Random.php
 ```
 
@@ -102,7 +115,7 @@ Source: `http://xkcd.com/221/`
 
 ## The test
 
-```sh
+```none
 /tests/RandomTest.php
 ```
 
@@ -124,13 +137,27 @@ class RandomTest extends PHPUnit_Framework_TestCase
 
 ---
 
+```none
+/phpunit.xml
+```
+
+```none
+<phpunit>
+    <testsuite>
+        <directory>tests</directory>
+    </testsuite>
+</phpunit>
+```
+
+---
+
 ## Run phpunit
 
-```sh
+```none
 > phpunit
 ```
 
-```sh
+```none
 PHPUnit 3.7.21 by Sebastian Bergmann.
 
 Configuration read from phpunit.xml
@@ -142,11 +169,17 @@ Time: 0 seconds, Memory: 2.75Mb
 OK (1 test, 1 assertion)
 ```
 
-???
+---
+
+background-image: url(images/great-success.jpg)
 
 ---
 
 ## Good enough?
+
+???
+
+* But is it good enough?
 
 --
 
@@ -154,27 +187,36 @@ OK (1 test, 1 assertion)
 
 --
 
+* If the project is not updated often
+
+--
+
 * If you're self-disciplined
+
+???
+
+* If you run your tests before each push
+* I've done releases which didn't pass tests
 
 --
 
 * If you work on a project alone
 
+???
+
+* Working on an open source project often involves many people
+
 --
 
-* If your environment is identical to production
+* If local environment is same as target environment
 
 ???
 
-If the build passes on your computer, will it work on production?
+* If tests pass on your computer, will they pass on production?
 
 --
 
-* If you support only one version of PHP
-
---
-
-* If you support only one database
+* If you're ok with testing on one version of PHP
 
 --
 
@@ -196,6 +238,7 @@ Martin Fowler (2006)
 
 ???
 
+* this is where CI comes into play
 * integration is a merge to a central branch (e.g. develop)
 * integrate often
 * run automated tests
@@ -218,7 +261,11 @@ class: center
 
 ???
 
-* Runs your tests every time you push code to GitHub
+* Hosted == No installation
+* Free for open source projects
+* Very easy to set up
+* Works only with GitHub
+* Runs your tests every time your push code
 
 ---
 
@@ -274,12 +321,9 @@ SQLite3&nbsp;&nbsp;&nbsp;
 
 ---
 
-## Setup
+class: center, middle
 
-1. Login via GitHub
-2. Service hook
-3. `.travis.yml`
-4. Push
+# Setup
 
 ---
 
@@ -293,7 +337,7 @@ background-image: url(images/travis-hook.gif)
 
 ## .travis.yml
 
-```sh
+```none
 language: php
 ```
 
@@ -301,11 +345,11 @@ language: php
 
 ## Push!
 
-```sh
+```none
 > git push
 ```
 
-```sh
+```none
 Counting objects: 10, done.
 Delta compression using up to 2 threads.
 Compressing objects: 100% (7/7), done.
@@ -325,7 +369,9 @@ background-image: url(images/build-history.png)
 
 ???
 
-* Keeps history of all your failures
+* Every time you break a build, it remembers
+* All branches
+* All tags
 
 ---
 
@@ -337,7 +383,7 @@ class: center, middle
 
 `.travis.yml`
 
-```sh
+```none
 language: php
 ```
 
@@ -351,7 +397,7 @@ This is a basic configuration.
 
 `.travis.yml`
 
-```sh
+```none
 language: php
 
 php: 5.5
@@ -368,7 +414,7 @@ Travis has sensible defaults
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -388,23 +434,10 @@ background-image: url(images/build-versions.png)
 
 ---
 
-# Scripts
-
-&nbsp;                |  &nbsp;
---------------- | ------------------------------------
-`install`       | Installs dependencies
-`before_script` | Sets up build
-`script`        | Runs the tests
-`after_success` | Runs if build was successful
-`after_failure` | Runs if build failed
-`after`         | Runs after build always
-
----
-
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -427,7 +460,7 @@ It holds one or more bash commands.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -448,7 +481,7 @@ You can change it to customize phpunit options.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -469,7 +502,7 @@ To run other test frameworks.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -490,7 +523,7 @@ Or to run your custom test runner script.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -505,7 +538,7 @@ php:
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -528,7 +561,7 @@ dependencies.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -552,7 +585,7 @@ available by default on Travis.
 `.travis.yml`
 
 
-```sh
+```none
 language: php
 
 php:
@@ -571,14 +604,13 @@ install:
 
 `.travis.yml`
 
-```sh
+```none
 language: php
 
 php:
     - 5.4
     - 5.5
     - 5.6
-    - hhvm
 
 env:
     - DB=postgres
@@ -599,6 +631,18 @@ background-image: url(images/build-matrix.png)
 
 ---
 
+# Scripts
+
+&nbsp;                |  &nbsp;
+--------------- | ------------------------------------
+`install`       | Installs dependencies
+`before_script` | Sets up build
+`script`        | Runs the tests
+`after_success` | Runs after build if it was successful
+`after_failure` | Runs after build if it failed
+`after`         | Runs after build always
+
+---
 
 `.travis.yml`
 
@@ -655,7 +699,7 @@ notifications:
 
 ---
 
-```sh
+```none
 POST /hooks/travis
 ```
 
@@ -743,14 +787,6 @@ background-image: url(images/pull-success.png)
 
 ---
 
-Great success.
-
-???
-
-TODO: borat?
-
----
-
 class: center middle
 
 # API
@@ -761,7 +797,7 @@ Standard REST + JSON
 
 ---
 
-```sh
+```none
 GET /repos/ihabunek/travis-demo
 ```
 
@@ -784,7 +820,7 @@ GET /repos/ihabunek/travis-demo
 
 ---
 
-```sh
+```none
 GET /repos/ihabunek/travis-demo/builds
 ```
 
@@ -824,7 +860,7 @@ GET /repos/ihabunek/travis-demo/builds
 
 ---
 
-```sh
+```none
 GET /repos/ihabunek/travis-demo/builds/39745461
 ```
 
@@ -872,101 +908,162 @@ class: center middle
 
 ---
 
-```sh
+```none
 > gem install travis
 ```
 
----
+???
 
-```sh
-> travis help
-```
-
-```code20
-Available commands:
-
-accounts  displays accounts and their subscription status
-branches  displays the most recent build for each branch
-cancel    cancels a job or build
-console   interactive shell
-disable   disables a project
-enable    enables a project
-encrypt   encrypts values for the .travis.yml
-endpoint  displays or changes the API endpoint
-help      helps you out when in dire need of information
-history   displays a projects build history
-init      generates a .travis.yml and enables the project
-login     authenticates against the API and stores the token
-logs      streams test logs
-monitor   live monitor for what's going on
-open      opens a build or job in the browser
-pubkey    prints out a repository's public key
-raw       makes an (authenticated) API call and prints out the result
-restart   restarts a build or job
-setup     sets up an addon or deploy target
-show      displays a build or job
-status    checks status of the latest build
-sync      triggers a new sync with GitHub
-token     outputs the secret API token
-version   outputs the client version
-whatsup   lists most recent builds
-whoami    outputs the current user
-```
+* Written in Ruby
+* Installed using RubyGems package manager
 
 ---
 
-```sh
+```code16
+accounts               displays accounts and their subscription status
+branches               displays the most recent build for each branch
+cache                  lists or deletes repository caches
+cancel                 cancels a job or build
+console                interactive shell
+disable                disables a project
+enable                 enables a project
+encrypt                encrypts values for the .travis.yml
+encrypt-file           encrypts a file and adds decryption steps to .travis.yml
+endpoint               displays or changes the API endpoint
+env                    show or modify build environment variables
+help                   helps you out when in dire need of information
+history                displays a projects build history
+init                   generates a .travis.yml and enables the project
+lint                   display warnings for a .travis.yml
+login                  authenticates against the API and stores the token
+logout                 deletes the stored API token
+logs                   streams test logs
+monitor                live monitor for what's going on
+open                   opens a build or job in the browser
+pubkey                 prints out a repository's public key
+raw                    makes an (authenticated) API call and prints out the result
+report                 generates a report useful for filing issues
+repos                  lists repositories the user has certain permissions on
+requests               lists recent requests
+restart                restarts a build or job
+settings               access repository settings
+setup                  sets up an addon or deploy target
+show                   displays a build or job
+sshkey                 checks, updates or deletes an SSH key
+status                 checks status of the latest build
+sync                   triggers a new sync with GitHub
+token                  outputs the secret API token
+version                outputs the client version
+whatsup                lists most recent builds
+whoami                 outputs the current user
+```
+
+---
+
+```none
+> travis login
+```
+
+```none
+Username: ihabunek
+Password for ihabunek: ********
+Two-factor authentication code for ihabunek: 892962
+Successfully logged in as ihabunek!
+```
+
+---
+
+```none
 > travis history
 ```
 
 ```code20
-#25 passed:     master Testing IRC notifications
-#21 passed:     master Testing notifications
-#20 passed:     master Removed testing on 5.2
-#19 errored:    master Added 'composer install' to travis.yml
-#18 passed:     master Added dependency on symfony/console
-#17 passed:     master Merge pull request #3 from ihabunek/correctamondo
-#16 passed:     Pull Request #3 Added a nod to XKCD
+#31 passed:  master Test multiple version
+#30 passed:  master Test no version
+#29 passed:  master Trying php -m in script_before
+#28 passed:  master Testing pecl install
+#27 passed:  master Testing before_script
+#26 passed:  master Testing before/after hooks
+#25 passed:  master Testing IRC notifications
+#24 passed:  master Testing notifications
+#23 passed:  master Testing notifications
+#22 passed:  master Testing notifications
 ```
 
 ---
 
 ```none
-> travis show 25
+> travis show 31
 ```
 
 ```none
-Build #25: Testing IRC notifications
+Build #31:  Test multiple version
 State:         passed
 Type:          push
 Branch:        master
-Compare URL:   https://github.com/ihabunek/travis-demo/compare/59cfd34c860a...fb757c43a96f
-Duration:      1 min 8 sec
-Started:       2013-09-08 20:25:28
-Finished:      2013-09-08 20:26:03
+Duration:      20 sec
+Started:       2014-11-02 14:04:47
+Finished:      2014-11-02 14:05:22
 
-#25.1 passed:    26 sec         php: 5.3
-#25.2 passed:    18 sec         php: 5.4
-#25.3 passed:    24 sec         php: 5.5
+#31.1 passed:    6 sec   php: 5.4, os: linux
+#31.2 passed:    3 sec   php: 5.5, os: linux
+#31.3 passed:    3 sec   php: 5.6, os: linux
+#31.4 passed:    8 sec   php: hhvm, os: linux
 ```
 
 ---
 
 ## PHP Travis Client
 
-`https://github.com/l3l0/php-travis-client`
+```none
+https://github.com/l3l0/php-travis-client
+```
 
 ```php
 $client = new Travis\Client();
-$repo = $client->fetchRepository('ihabunek/travis-demo');
 
-echo "Builds:\n";
-foreach ($repo->getBuilds() as $build) {
+$t = $client->fetchRepository('ihabunek/travis-demo');
+
+foreach ($t->getBuilds() as $build) {
     $id = $build->getID();
-    $result = $build->getResult() ? "Passed" : "Failed";
+    $result = $build->getResult();
+
     echo " - $id: $result\n";
 }
 ```
+
+---
+
+## Continuous deployment
+
+- automatski deploy ako prođu testovi
+- podržava: Heroku Nodejitsu OpenShift RubyGems
+
+---
+
+## Skipping tests
+
+![ci skip](images/ci-skip.png)
+
+---
+
+
+## Badges
+
+```none
+https://travis-ci.org/<username>/<project>.svg
+```
+
+```none
+https://travis-ci.org/ihabunek/travis-demo.svg
+```
+
+![passing](images/passing.svg) ![failing](images/failing.svg)
+
+
+---
+
+background-image: url(images/pricing.png)
 
 ---
 
