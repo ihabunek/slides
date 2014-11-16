@@ -3,55 +3,7 @@
 <head>
     <title>Travis CI - Ivan Habunek</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <style type="text/css">
-
-        @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
-        @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-        @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-
-        body { font-family: 'Droid Serif', Helvetica, Arial, sans-serif }
-        h1, h2, h3, h4, h5 {
-            font-family: 'Yanone Kaffeesatz', Helvetica, Arial, sans-serif;
-            font-weight: normal;
-        }
-        td {
-            padding: 4px 10px;
-        }
-        .remark-code, .remark-inline-code {
-            font-family: 'Ubuntu Mono', Consolas, Courier new, monospace;
-        }
-        .remark-code {
-            font-size: 26px;
-        }
-        .code16 {
-            font-size: 16px;
-        }
-        .code20 {
-            font-size: 20px;
-        }
-        .code16 .hljs-keyword,
-        .code20 .hljs-keyword {
-            font-weight: normal;
-        }
-        .none .hljs-comment,
-        .none .hljs-id,
-        .none .hljs-keyword,
-        .none .hljs-number,
-        .none .hljs-pseudo,
-        .none .hljs-tag {
-            color: black;
-            font-weight: normal !important;
-        }
-        .remark-slide-content {
-            font-size: 24px;
-        }
-        .remark-notes, .remark-notes-preview {
-            font-size: 28px;
-        }
-        blockquote {
-            text-align: justify;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
     <textarea id="source">
@@ -108,8 +60,8 @@ Source: `http://xkcd.com/221/`
 
 ???
 
-- minimalan primjer
-- nedostaje napespace
+* You write some logic.
+* Want to make sure it works as planned.
 
 ---
 
@@ -133,7 +85,8 @@ class RandomTest extends PHPUnit_Framework_TestCase
 
 ???
 
-- Test Driven Development afficionados do it the other way around
+* You write a test
+* TDD afficionados do it the other way around
 
 ---
 
@@ -175,56 +128,35 @@ background-image: url(images/great-success.jpg)
 
 ---
 
-## Good enough?
+class: center, middle
 
-???
-
-* But is it good enough?
-
---
-
-* Well, maybe...
-
---
-
-* If the project is not updated often
-
---
-
-* If you're self-disciplined
-
-???
-
-* If you run your tests before each push
-* I've done releases which didn't pass tests
-
---
-
-* If you work on a project alone
-
-???
-
-* Working on an open source project often involves many people
-
---
-
-* If local environment is same as target environment
-
-???
-
-* If tests pass on your computer, will they pass on production?
-
---
-
-* If you're ok with testing on one version of PHP
-
---
-
-* Maybe not
+# Good enough?
 
 ---
 
-## Continuous Integration
+class: center, middle
+
+# Maybe
+
+???
+
+* If the project is not updated often
+* If you run your tests before each push
+* I've done releases which didn't pass tests
+* If you're self-disciplined
+* If you work on a project alone
+* Working on an open source project often involves many people
+* If you're ok with testing on one version of PHP
+
+---
+
+class: center, middle
+
+# Maybe not
+
+---
+
+# Continuous Integration
 
 > Continuous Integration is a software development practice where members of a
 > team integrate their work frequently, usually each person integrates at least
@@ -232,7 +164,7 @@ background-image: url(images/great-success.jpg)
 > by an automated build (including test) to detect integration errors as quickly
 > as possible.
 
-Martin Fowler (2006)
+*Martin Fowler (2006)*
 
 `http://www.martinfowler.com/articles/continuousIntegration.html`
 
@@ -407,7 +339,7 @@ script: phpunit
 
 ???
 
-Travis has sensible defaults
+* Sensible defaults
 
 ---
 
@@ -418,10 +350,10 @@ Travis has sensible defaults
 language: php
 
 php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
 ```
 
 ???
@@ -440,12 +372,6 @@ background-image: url(images/build-versions.png)
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-
 script: phpunit
 ```
 
@@ -463,12 +389,6 @@ It holds one or more bash commands.
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-
 script: phpunit --coverage-html target/coverage
 ```
 
@@ -483,12 +403,6 @@ You can change it to customize phpunit options.
 
 ```none
 language: php
-
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
 
 script: vendor/bin/atoum
 ```
@@ -505,12 +419,6 @@ To run other test frameworks.
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-
 script: ./bin/test.sh
 ```
 
@@ -525,12 +433,6 @@ Or to run your custom test runner script.
 
 ```none
 language: php
-
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
 ```
 
 ---
@@ -540,12 +442,6 @@ php:
 
 ```none
 language: php
-
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
 
 install: composer install
 ```
@@ -564,15 +460,9 @@ dependencies.
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-
 install:
-    - composer install
-    - pecl install oauth
+  - composer install
+  - pecl install oauth
 ```
 
 ???
@@ -588,52 +478,30 @@ available by default on Travis.
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-
 install:
-    - composer install
-    - pecl install oauth
-    - apt-get -y install solr
+  - composer install
+  - pecl install oauth
+  - apt-get -y install solr
 ```
 
 ---
 
 `.travis.yml`
 
+
 ```none
 language: php
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-
-env:
-    - DB=postgres
-    - DB=mysql
-    - DB=sqlite
-
-script: phpunit --configuration $DB.phpunit.xml
+before_script:
+  - createdb testing
+  - psql --dbname=testing --file=setup.sql
 ```
-
-???
-
-- Integration tests.
-- Sets environment variables.
-
----
-
-background-image: url(images/build-matrix.png)
 
 ---
 
 # Scripts
 
-&nbsp;                |  &nbsp;
+&nbsp;          |  &nbsp;
 --------------- | ------------------------------------
 `install`       | Installs dependencies
 `before_script` | Sets up build
@@ -646,11 +514,92 @@ background-image: url(images/build-matrix.png)
 
 `.travis.yml`
 
+```yaml
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+```
+
+???
+
+- Running integration tests on multiple databases
+- Testing with different versions of dependencies
+
+---
+
+background-image: url(images/build-matrix.png)
+
+---
+
+`.travis.yml`
+
+```yaml
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+
+matrix:
+  exclude:
+    - php: hhvm
+      env: DB=postgres
+```
+
+---
+
+`.travis.yml`
+
+```yaml
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+
+matrix:
+  allow_failures:
+    - php: hhvm
+```
+
+---
+
+class: center, middle
+
+# Notifications
+
+---
+
+`.travis.yml`
+
 ```yml
 notifications:
-    email:
-        - ivan.habunek@gmail.com
-        - ivan@bezdomni.net
+  email:
+    - ivan.habunek@gmail.com
+    - ivan@bezdomni.net
 ```
 
 ---
@@ -660,8 +609,8 @@ notifications:
 
 ```yml
 notifications:
-    irc:
-        - "irc.freenode.org#zgphp"
+  irc:
+    - "irc.freenode.org#zgphp"
 ```
 
 --
@@ -674,16 +623,15 @@ background-image: url(images/what-year.jpg)
 
 ---
 
-
 `.travis.yml`
 
-```yml
+```none
 notifications:
-    campfire: [subdomain]:[api_token]@[room]
-    flowdock: [api_token]
-    hipchat:  [api_token]@[room]
-    sqwiggle: [api_token]@[room]
-    slack:    [account]:[token]#[channel]
+  campfire: [subdomain]:[api_token]@[room]
+  flowdock: [api_token]
+  hipchat:  [api_token]@[room]
+  sqwiggle: [api_token]@[room]
+  slack:    [account]:[token]#[channel]
 ```
 
 ---
@@ -694,7 +642,7 @@ notifications:
 notifications:
     webhooks:
         urls:
-            - "http://bezdomni.net/hooks/travis"
+          - "http://bezdomni.net/hooks/travis"
 ```
 
 ---
@@ -791,9 +739,61 @@ class: center middle
 
 # API
 
-???
+---
 
-Standard REST + JSON
+.left-column[.text16[
+```
+GET    /accounts
+POST   /auth/github
+GET    /broadcasts
+GET    /config
+POST   /authorizations
+DELETE /authorizations/{auth}
+
+GET    /builds
+GET    /builds/{build.id}
+POST   /builds/{build.id}/cancel
+POST   /builds/{build.id}/restart
+
+GET    /hooks
+PUT    /hooks
+PUT    /hooks/{hook.id}
+
+GET    /jobs/{job.id}
+POST   /jobs/{job.id}/cancel
+POST   /jobs/{job.id}/restart
+GET    /jobs/{job.id}/logs
+GET    /jobs/{job.id}/annotations
+POST   /jobs/{job.id}/annotations
+```
+]]
+
+.right-column[.text16[
+```
+GET    /repos/{repo.id}
+GET    /repos/{repo.id}/branches
+GET    /repos/{repo.id}/branches/{branch.id}
+GET    /repos/{repo.id}/settings
+PATCH  /repos/{repo.id}/settings
+GET    /repos/{repo.id}/keys
+POST   /repos/{repo.id}/keys
+GET    /repos/{repo.id}/caches
+DELETE /repos/{repo.id}/caches
+GET    /repos/{repo.id}/builds
+
+GET    /repos/settings/env_vars
+POST   /repos/settings/env_vars
+PATCH  /repos/settings/env_vars
+DELETE /repos/settings/env_vars
+
+GET    /requests
+GET    /requests/{request.id}
+GET    /users/
+GET    /users/{user.id}
+GET    /users/permissions
+POST   /users/sync
+```
+]]
 
 ---
 
@@ -1034,19 +1034,73 @@ foreach ($t->getBuilds() as $build) {
 
 ---
 
-## Continuous deployment
+class: center, middle
 
-- automatski deploy ako prođu testovi
-- podržava: Heroku Nodejitsu OpenShift RubyGems
+# Continuous deployment
 
 ---
+
+class: center, middle
+
+Appfog&nbsp;&nbsp;&nbsp;
+Cloud 66&nbsp;&nbsp;&nbsp;
+Heroku&nbsp;&nbsp;&nbsp;
+AWS CodeDeploy&nbsp;&nbsp;&nbsp;
+Modulus&nbsp;&nbsp;&nbsp;
+Nodejitsu&nbsp;&nbsp;&nbsp;
+OpenShift&nbsp;&nbsp;&nbsp;
+cloudControl&nbsp;&nbsp;&nbsp;
+CloudFoundry&nbsp;&nbsp;&nbsp;
+RubyGems&nbsp;&nbsp;&nbsp;
+AWS OpsWorks&nbsp;&nbsp;&nbsp;
+PyPI&nbsp;&nbsp;&nbsp;
+Divshot.io&nbsp;&nbsp;&nbsp;
+Rackspace Cloud Files&nbsp;&nbsp;&nbsp;
+npm&nbsp;&nbsp;&nbsp;
+S3&nbsp;&nbsp;&nbsp;
+Ninefold&nbsp;&nbsp;&nbsp;
+Engine Yard&nbsp;&nbsp;&nbsp;
+GitHub Releases&nbsp;&nbsp;&nbsp;
+Deis&nbsp;&nbsp;&nbsp;
+Hackage&nbsp;&nbsp;&nbsp;
+Google Cloud Storage&nbsp;&nbsp;&nbsp;
+
+
+---
+
+`.travis.yml`
+
+```yaml
+deploy:
+    provider: heroku
+    app: my-staging-app
+    api_key: "HERKOU API KEY"
+    on:
+        branch: develop
+        php: 5.6
+```
+
+???
+
+Possible to encrypt secret data so it can be added to a public repo.
+
+---
+
+`.travis.yml`
+
+```yaml
+after_success:
+  - bin/deploy.sh
+```
+
+---
+
+background-image: url(images/ci-skip.png)
+class: center
 
 ## Skipping tests
 
-![ci skip](images/ci-skip.png)
-
 ---
-
 
 ## Badges
 
@@ -1076,6 +1130,8 @@ Please rate my talk
 ![Rate my talk](images/qrcode.png)
 
 `https://joind.in/12413`
+
+---
 
 ## References
 
