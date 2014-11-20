@@ -86,6 +86,7 @@ class RandomTest extends PHPUnit_Framework_TestCase
 ???
 
 * You write a test
+* Confirms no obvious errors
 * TDD afficionados do it the other way around
 
 ---
@@ -334,7 +335,6 @@ language: php
 
 php: 5.5
 
-script: phpunit
 ```
 
 ???
@@ -437,6 +437,20 @@ language: php
 
 ---
 
+# Scripts
+
+&nbsp;           |  &nbsp;
+---------------- | ------------------------------------
+`before_install` | Prepare for installing dependencies
+`install`        | Installs dependencies
+`before_script`  | Sets up build
+`script`         | Runs the tests
+`after_success`  | Runs after build if it was successful
+`after_failure`  | Runs after build if it failed
+`after`          | Runs after build always
+
+---
+
 `.travis.yml`
 
 
@@ -499,16 +513,20 @@ before_script:
 
 ---
 
-# Scripts
+`.travis.yml`
 
-&nbsp;          |  &nbsp;
---------------- | ------------------------------------
-`install`       | Installs dependencies
-`before_script` | Sets up build
-`script`        | Runs the tests
-`after_success` | Runs after build if it was successful
-`after_failure` | Runs after build if it failed
-`after`         | Runs after build always
+```yaml
+language: php
+
+php: 5.5
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+
+script: phpunit --bootstrap=tests/bootstrap-$DB.php
+```
 
 ---
 
@@ -527,12 +545,16 @@ env:
   - DB=postgres
   - DB=mysql
   - DB=sqlite
+
+script: phpunit --bootstrap=tests/bootstrap-$DB.php
+
 ```
 
 ???
 
-- Running integration tests on multiple databases
+Other uses:
 - Testing with different versions of dependencies
+- Break up tests to parallelize them across VMs
 
 ---
 
@@ -583,6 +605,30 @@ env:
 matrix:
   allow_failures:
     - php: hhvm
+```
+
+---
+
+`.travis.yml`
+
+```yaml
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+env:
+  - DB=postgres
+  - DB=mysql
+  - DB=sqlite
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
 ```
 
 ---
@@ -732,6 +778,81 @@ background-image: url(images/pull-failed.png)
 ---
 
 background-image: url(images/pull-success.png)
+
+---
+
+class: center middle
+
+# Speed
+
+---
+
+`composer.json`
+
+```yaml
+{
+    "require": {
+        "symfony/console": "2.5.*",
+        "symfony/filesystem": "2.5.*",
+        "symfony/http-kernel": "2.5.*",
+        "symfony/security": "2.5.*",
+        "symfony/yaml": "2.5.*"
+    }
+}
+```
+
+---
+
+# > time composer install
+
+--
+
+`composer.lock` not committed
+
+```none
+real  0m17.505s
+user  0m4.400s
+sys   0m0.500s
+```
+
+--
+
+`composer.lock` committed
+
+```none
+real  0m2.158s
+user  0m0.559s
+sys   0m0.275s
+```
+
+---
+
+`.travis.yml`
+
+```none
+cache:
+  directories:
+    - vendor
+```
+
+--
+
+Beta, only available for private repositories.
+
+---
+
+`.travis.yml`
+
+```yaml
+language: php
+
+env:
+  - TEST_GROUP=models
+  - TEST_GROUP=controllers
+  - TEST_GROUP=views
+
+script: phpunit --group=$TEST_GROUP
+```
 
 ---
 
@@ -1096,9 +1217,17 @@ after_success:
 ---
 
 background-image: url(images/ci-skip.png)
-class: center
 
 ## Skipping tests
+
+---
+
+## Retrying commands
+
+```none
+before_script:
+  - travis_retry composer install
+```
 
 ---
 
@@ -1114,11 +1243,19 @@ https://travis-ci.org/ihabunek/travis-demo.svg
 
 ![passing](images/passing.svg) ![failing](images/failing.svg)
 
-
 ---
 
 background-image: url(images/pricing.png)
 
+---
+
+class: center, middle
+
+# Travis is cool
+
+## Use it
+
+(or something like it)
 ---
 
 class: center, middle
