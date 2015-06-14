@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generators - Ivan Habunek</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <textarea id="source">
+
+class: center, middle
+
+# Generators
+
+## Ivan Habunek
+
+ZgPHP Meetup #46, Zagreb, 18.06.2015
+
+---
+
+class: center, middle
+
+## Ivan Habunek
+
+### @ihabunek
+
+***Big Fish Software*** Sole developer and owner
+
+***WebCamp Zagreb*** Co-organizer
+
+***ZgPHP meetups*** Co-organizer
+
+Open source enthusiast
+
+---
+
+background-image: url(images/generator.jpg)
+
+---
+
+class: center, middle
+
+# Iterators
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+    abstract public current()
+    abstract public key()
+    abstract public next()
+    abstract public rewind()
+    abstract public valid()
+}
+```
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+*   abstract public current()
+    abstract public key()
+    abstract public next()
+    abstract public rewind()
+    abstract public valid()
+}
+```
+
+**current()**
+
+Returns the current element.
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+    abstract public current()
+*   abstract public key()
+    abstract public next()
+    abstract public rewind()
+    abstract public valid()
+}
+```
+
+**key()**
+
+Returns the key of the current element.
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+    abstract public current()
+    abstract public key()
+*   abstract public next()
+    abstract public rewind()
+    abstract public valid()
+}
+```
+
+**next()**
+
+Move forward to the next element.
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+    abstract public current()
+    abstract public key()
+    abstract public next()
+*   abstract public rewind()
+    abstract public valid()
+}
+```
+
+**rewind()**
+
+Rewind the Iterator to the first element.
+
+---
+
+```php
+interface Iterator extends Traversable
+{
+    abstract public current()
+    abstract public key()
+    abstract public next()
+    abstract public rewind()
+*   abstract public valid()
+}
+```
+
+**valid()**
+
+Checks if current position is valid.
+
+---
+
+class: center, middle
+
+# Use case #1: Reading file data
+
+---
+
+### Approach #1: Read file into memory
+
+```php
+$lines = file('input.txt');
+foreach ($lines as $line) {
+    print $line;
+}
+```
+
+---
+
+### Approach #1: Read file into memory
+
+```php
+function getLines($file)
+{
+    return file($file);
+}
+
+function processData($lines)
+{
+    foreach ($lines as $line) {
+        print $line;
+    }
+}
+```
+
+```php
+$lines = getLines('input.txt');
+
+processData($lines);
+```
+
+---
+
+### Approach #1: Read file into memory
+
+.green[**Good**]: Separation of concerns
+
+.red[**Bad**]: Memory hog
+
+---
+
+### Approach #2: Iterate over file
+
+```php
+$fp = fopen('input.txt', 'r');
+while ($line = $fp->gets()) {
+    print $line;
+}
+fclose($fp);
+```
+
+---
+
+### Approach #2: Iterate over file
+
+
+.green[**Good**]: Memory efficient
+
+.red[**Bad**]: Violates SRP
+
+---
+
+
+class: center, middle
+
+## Solution: use iterators
+
+---
+
+## Approach #3: File iterator
+
+.left-column[.text16[
+```php
+class FileIterator implements Iterator {
+
+    /** File pointer. */
+    protected $fp;
+
+    /** Current line (value) */
+    protected $line;
+
+    /** Current line number (key) */
+    protected $key;
+
+    public function __construct($file) {
+        $this->fp = fopen($file, 'r');
+    }
+
+    public function __destruct() {
+        fclose($this->fp);
+    }
+
+    public function current() {
+        return $this->data;
+    }
+```
+]]
+
+.right-column[.text16[
+```php
+
+
+
+    public function key() {
+        return $this->key;
+    }
+
+    public function next() {
+        $this->data = fgets($this->fp);
+        $this->key++;
+    }
+
+    public function rewind() {
+        fseek($this->fp, 0);
+        $this->data = fgets($this->fp);
+        $this->key = 0;
+    }
+
+    public function valid() {
+        return false !== $this->data;
+    }
+}
+```
+]]
+
+---
+
+## Approach #3: File iterator
+
+```php
+class FileIterator implements Iterator {
+
+    /** File pointer. */
+    protected $fp;
+
+    /** Current line (value) */
+    protected $line;
+
+    /** Current line number (key) */
+    protected $key;
+}
+```
+
+---
+
+## Approach #3: File iterator
+
+```php
+class FileIterator implements Iterator {
+
+    public function __construct($file) {
+        $this->fp = fopen($file, 'r');
+    }
+
+    public function __destruct() {
+        fclose($this->fp);
+    }
+}
+```
+
+---
+
+## Approach #3: File iterator
+
+```php
+class FileIterator implements Iterator {
+
+    public function next() {
+        $this->data = fgets($this->fp);
+        $this->key++;
+    }
+
+    public function rewind() {
+        fseek($this->fp, 0);
+        $this->data = fgets($this->fp);
+        $this->key = 0;
+    }
+
+    public function valid() {
+        return false !== $this->data;
+    }
+}
+```
+
+---
+
+## Approach #3: File iterator
+
+```php
+class FileIterator implements Iterator {
+
+    public function current() {
+        return $this->data;
+    }
+
+    public function key() {
+        return $this->key;
+    }
+}
+```
+
+---
+
+## Approach #3: File iterator
+
+```php
+$it = new FileIterator(__FILE__);
+foreach ($it as $line) {
+    print $line;
+}
+```
+
+---
+
+## Approach #3: File iterator
+
+```php
+// Data generator
+function getLines($file)
+{
+    return new FileIterator($file);
+}
+
+// Data consumer
+function printLines(Iterator $lineIterator)
+{
+    foreach ($lineIterator as $line) {
+        print $line
+    }
+}
+```
+
+---
+
+background-image: url(images/square_wheels.jpg)
+class: center
+
+### Don't reinvent the wheel
+
+---
+
+### SplFileInfo & SplFileObject
+
+```php
+$fileInfo = new SplFileInfo(__FILE__);
+$fileObject = $fileInfo->openFile('r');
+
+foreach ($fileObject as $line) {
+    print_r($line);
+}
+
+```
+
+---
+
+class: center, middle
+
+## The thing with interators...
+
+## ... so much code.
+
+---
+
+## Introducing generators
+
+```php
+function getLines($file)
+{
+    $fp = fopen($file, 'r');
+
+    while ($line = $fp->gets()) {
+        yield $line;
+    }
+
+    fclose($fp);
+}
+```
+
+---
+
+## Using generators
+
+```php
+$lineGenerator = getLines(__FILE__);
+foreach ($lineGenerator as $line) {
+    print $line;
+}
+```
+
+---
+
+## Generator disadvantages
+
+- can be traversed only once
+- cannot be indexed like an array
+- cannot be used with `array_map` or `array_filter`
+
+---
+
+## Reverse generators
+
+```php
+function writer($file)
+{
+    $fp = fopen($file, 'a');
+
+    while (true) {
+        $line = yield;
+        $fp->write($line);
+    }
+}
+```
+
+```php
+$w = writer('log.txt');
+$w->send("foo");
+$w->send("bar");
+$w->send("baz");
+```
+
+---
+
+class: center, middle
+
+# Real world example
+
+## API returning a lot of JSON data
+
+---
+
+### Generator #1: Read data from database and yield rows.
+
+```php
+function getCategoryRows(PDO $pdo)
+{
+    $sql = "SELECT * FROM branche";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    foreach ($stmt as $row) {
+        yield $row;
+    }
+}
+```
+
+---
+
+### Generator #2: Iterates over rows, and yields API models.
+
+```php
+function getCategoryModels(Generator $rows)
+{
+    foreach ($rows as $row) {
+        yield [
+            'id' = $row['branche_id'];
+            'name' = $row['branche_name'];
+        ];
+    }
+}
+```
+
+---
+
+### Generator #3: Iterates over models, and yields JSON chunks.
+
+```php
+function getCategoriesJson(Generator $models)
+{
+    yield "[";
+
+    $first = true;
+    foreach ($models as $model) {
+        if (!$first) yield ",";
+        $first = false;
+
+        yield json_encode($model);
+    }
+
+    yield "]";
+}
+
+```
+
+---
+
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Echo the data
+foreach ($json as $chunk) {
+    echo $chunk;
+}
+
+flush();
+```
+
+---
+
+### More realistic usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Create a streamed response
+$response = new Symfony\Component\HttpFoundation\StreamedResponse();
+$response->setCallback(function () use ($json) {
+    foreach ($json as $chunk) {
+        echo $chunk;
+    }
+    flush();
+});
+
+// Send
+$response->send();
+
+```
+---
+
+class: center, middle
+
+# Real world example
+
+## Infinite series
+
+
+
+
+    </textarea>
+
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var slideshow = remark.create({
+            highlightStyle: 'idea',
+        }) ;
+    </script>
+</body>
+</html>
