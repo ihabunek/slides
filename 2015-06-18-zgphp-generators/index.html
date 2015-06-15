@@ -421,7 +421,25 @@ function getLines($file)
     $fp = fopen($file, 'r');
 
     while ($line = $fp->gets()) {
-        yield $line;
+*       yield $line;
+    }
+
+    fclose($fp);
+}
+```
+---
+
+## Introducing generators
+
+```php
+function getLines($file)
+{
+    $fp = fopen($file, 'r');
+
+    $no = 0;
+    while ($line = $fp->gets()) {
+*       yield $no => $line;
+        $no += 1;
     }
 
     fclose($fp);
@@ -430,14 +448,29 @@ function getLines($file)
 
 ---
 
+class: center, middle
+
+## Syntax sugar, nothing more
+
+---
+
 ## Using generators
 
 ```php
 $lineGenerator = getLines(__FILE__);
-foreach ($lineGenerator as $line) {
+foreach ($lineGenerator as $no => $line) {
     print $line;
 }
 ```
+
+---
+
+## Generator advantages
+
+- simpler code
+- faster than iterators
+
+.text16[https://gist.github.com/nikic/2975796]
 
 ---
 
@@ -480,6 +513,16 @@ class: center, middle
 
 ---
 
+### Sub-optimal approach
+
+```php
+$data = $database->loadData();
+$json = json_encode($data);
+echo $json;
+```
+
+---
+
 ### Generator #1: Read data from database and yield rows.
 
 ```php
@@ -490,9 +533,42 @@ function getCategoryRows(PDO $pdo)
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
-    foreach ($stmt as $row) {
+    while ($row = $stmt->fetch()) {
         yield $row;
     }
+}
+```
+---
+
+### Generator #1: Read data from database and yield rows.
+
+```php
+function getCategoryRows(PDO $pdo)
+{
+    $sql = "SELECT * FROM branche";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+*   while ($row = $stmt->fetch()) {
+*       yield $row;
+*   }
+}
+```
+
+---
+
+### ~~Generator~~ #1: Read data from database and yield rows.
+
+```php
+function getCategoryRows(PDO $pdo)
+{
+    $sql = "SELECT * FROM branche";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    return $stmt;
 }
 ```
 
@@ -501,7 +577,7 @@ function getCategoryRows(PDO $pdo)
 ### Generator #2: Iterates over rows, and yields API models.
 
 ```php
-function getCategoryModels(Generator $rows)
+function getCategoryModels(Iterator $rows)
 {
     foreach ($rows as $row) {
         yield [
@@ -517,7 +593,7 @@ function getCategoryModels(Generator $rows)
 ### Generator #3: Iterates over models, and yields JSON chunks.
 
 ```php
-function getCategoriesJson(Generator $models)
+function getCategoriesJson(Iterator $models)
 {
     yield "[";
 
@@ -558,6 +634,116 @@ flush();
 
 ---
 
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+*$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Echo the data
+foreach ($json as $chunk) {
+    echo $chunk;
+}
+
+flush();
+```
+
+---
+
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+*$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Echo the data
+foreach ($json as $chunk) {
+    echo $chunk;
+}
+
+flush();
+```
+
+---
+
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+*$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Echo the data
+foreach ($json as $chunk) {
+    echo $chunk;
+}
+
+flush();
+```
+
+---
+
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+*$json = getCategoriesJson($models);
+
+// Echo the data
+foreach ($json as $chunk) {
+    echo $chunk;
+}
+
+flush();
+```
+
+---
+
+### Usage
+
+```code20
+// Database
+$pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
+$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
+
+// Data wrangling
+$rows = getCategoryRows($pdo);
+$models = getCategoryModels($rows);
+$json = getCategoriesJson($models);
+
+// Echo the data
+*foreach ($json as $chunk) {
+*   echo $chunk;
+*}
+
+flush();
+```
+
+---
+
 ### More realistic usage
 
 ```code20
@@ -571,13 +757,13 @@ $models = getCategoryModels($rows);
 $json = getCategoriesJson($models);
 
 // Create a streamed response
-$response = new Symfony\Component\HttpFoundation\StreamedResponse();
-$response->setCallback(function () use ($json) {
-    foreach ($json as $chunk) {
-        echo $chunk;
-    }
-    flush();
-});
+*$response = new Symfony\Component\HttpFoundation\StreamedResponse();
+*$response->setCallback(function () use ($json) {
+*   foreach ($json as $chunk) {
+*       echo $chunk;
+*   }
+*   flush();
+*});
 
 // Send
 $response->send();
@@ -591,6 +777,194 @@ class: center, middle
 
 ## Infinite series
 
+---
+
+class: center, middle
+
+# Real world example
+
+## Infinite(ish) series
+
+---
+
+### Range function
+
+```php
+array range (
+    mixed $start,
+    mixed $end,
+    number $step = 1
+)
+```
+
+---
+
+### Sub-optimal approach
+
+```php
+$range = range(0, 1E6);
+foreach ($range as $number) {
+    // Do something
+}
+```
+
+---
+
+### Sub-optimal approach
+
+```php
+$range = range(0, 1E6);
+foreach ($range as $number) {
+    // Do something
+}
+```
+
+Memory usage (PHP 5.6): 68MB
+
+---
+
+### Sub-optimal approach
+
+```php
+$range = range(0, 1E6);
+foreach ($range as $number) {
+    // Do something
+}
+```
+
+Memory usage (PHP 5.6): 68MB
+
+Memory usage (PHP 7.0a1): 21MB
+
+---
+
+### Reimplement range as an Iterator
+
+.left-column[.text16[
+```php
+class XRange implements Iterator
+{
+    private $max;
+    private $min;
+    private $position;
+    private $step;
+
+    public function __construct(
+        $min, $max, $step = 1)
+    {
+        $this->max = $max;
+        $this->min = $min;
+        $this->position = $min;
+        $this->step = $step;
+    }
+
+    function rewind()
+    {
+        $this->position = $this->min;
+    }
+
+    function current()
+    {
+        return $this->position;
+    }
+
+```
+]]
+
+.right-column[.text16[
+```php
+
+
+
+
+
+
+
+
+    function key()
+    {
+        return $this->position;
+    }
+
+    function next()
+    {
+        $this->position += $this->step;
+    }
+
+    function valid()
+    {
+        return $this->position = $this->max;
+    }
+}
+
+
+.
+```
+]]
+
+---
+
+### Reimplement range using a generator
+
+```php
+function xrange($min, $max, $step = 1)
+{
+    for ($i = $min; $i <= $max; $i += $step) {
+        yield $i;
+    }
+}
+```
+
+---
+
+### Reimplement range using a generator
+
+```php
+function xrange($min, $max, $step = 1)
+{
+    for ($i = $min; $i <= $max; $i += $step) {
+        yield $i;
+    }
+}
+```
+
+Limited to PHP_INT_MAX (2,147,483,647)
+
+---
+
+### We can go further
+
+```php
+function xrange($min, $max, $step = 1)
+{
+    for (
+        $i = $min;
+        bc_cmp($i, $max) < 0;
+        $i = bc_add($i, $step)
+    ) {
+        yield $i;
+    }
+}
+```
+
+---
+
+### We can go further
+
+```php
+function xrange($min, $max, $step = 1)
+{
+    for (
+        $i = $min;
+        bc_cmp($i, $max) < 0;
+        $i = bc_add($i, $step)
+    ) {
+        yield $i;
+    }
+}
+```
+
+Limited to your memory.
 
 
 

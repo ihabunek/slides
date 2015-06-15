@@ -42,7 +42,7 @@ blockquote { text-align: justify }
 .left-column { float: left }
 .right-column { float: right }
 .left-column,
-.right-column { width: 50%; padding-top: 1em }
+.right-column { width: 50% }
 
 .red { color: red}
 .green { color: green}
