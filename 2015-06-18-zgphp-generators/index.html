@@ -153,7 +153,7 @@ class: center, middle
 ```php
 $lines = file('input.txt');
 foreach ($lines as $line) {
-    print $line;
+    processLine($line); // Does some work
 }
 ```
 
@@ -170,7 +170,7 @@ function getLines($file)
 function processData($lines)
 {
     foreach ($lines as $line) {
-        print $line;
+        processLine($line);
     }
 }
 ```
@@ -196,7 +196,7 @@ processData($lines);
 ```php
 $fp = fopen('input.txt', 'r');
 while ($line = $fp->gets()) {
-    print $line;
+    processLine($line);
 }
 fclose($fp);
 ```
@@ -232,7 +232,7 @@ class FileIterator implements Iterator {
     protected $line;
 
     /** Current line number (key) */
-    protected $key;
+    protected $no;
 
     public function __construct($file) {
         $this->fp = fopen($file, 'r');
@@ -243,7 +243,7 @@ class FileIterator implements Iterator {
     }
 
     public function current() {
-        return $this->data;
+        return $this->line;
     }
 ```
 ]]
@@ -254,22 +254,22 @@ class FileIterator implements Iterator {
 
 
     public function key() {
-        return $this->key;
+        return $this->no;
     }
 
     public function next() {
-        $this->data = fgets($this->fp);
-        $this->key++;
+        $this->line = fgets($this->fp);
+        $this->no++;
     }
 
     public function rewind() {
         fseek($this->fp, 0);
-        $this->data = fgets($this->fp);
-        $this->key = 0;
+        $this->line = fgets($this->fp);
+        $this->no = 0;
     }
 
     public function valid() {
-        return false !== $this->data;
+        return false !== $this->line;
     }
 }
 ```
@@ -289,7 +289,7 @@ class FileIterator implements Iterator {
     protected $line;
 
     /** Current line number (key) */
-    protected $key;
+    protected $no;
 }
 ```
 
@@ -318,18 +318,18 @@ class FileIterator implements Iterator {
 class FileIterator implements Iterator {
 
     public function next() {
-        $this->data = fgets($this->fp);
-        $this->key++;
+        $this->line = fgets($this->fp);
+        $this->no++;
     }
 
     public function rewind() {
         fseek($this->fp, 0);
-        $this->data = fgets($this->fp);
-        $this->key = 0;
+        $this->line = fgets($this->fp);
+        $this->no = 0;
     }
 
     public function valid() {
-        return false !== $this->data;
+        return false !== $this->line;
     }
 }
 ```
@@ -342,11 +342,11 @@ class FileIterator implements Iterator {
 class FileIterator implements Iterator {
 
     public function current() {
-        return $this->data;
+        return $this->line;
     }
 
     public function key() {
-        return $this->key;
+        return $this->no;
     }
 }
 ```
@@ -356,9 +356,9 @@ class FileIterator implements Iterator {
 ## Approach #3: File iterator
 
 ```php
-$it = new FileIterator(__FILE__);
+$it = new FileIterator($file);
 foreach ($it as $line) {
-    print $line;
+    processLine($line);
 }
 ```
 
@@ -374,10 +374,10 @@ function getLines($file)
 }
 
 // Data consumer
-function printLines(Iterator $lineIterator)
+function processLines(Iterator $lineIterator)
 {
     foreach ($lineIterator as $line) {
-        print $line
+        processLine($line);
     }
 }
 ```
@@ -416,17 +416,72 @@ class: center, middle
 ## Introducing generators
 
 ```php
+function generator() {
+    yield 1;
+    yield 2;
+    yield 3;
+}
+```
+
+```php
+$gen = generator();
+foreach ($gen as $item) {
+    echo $item;
+}
+```
+
+```sh
+123
+```
+
+---
+
+## Introducing generators
+
+```php
+function generator() {
+    yield 1;
+    yield 2;
+*   return;
+    yield 3;
+}
+```
+
+---
+
+## Introducing generators
+
+```php
+function generator() {
+    yield 1;
+    yield 2;
+*   return 4;
+    yield 3;
+}
+```
+
+```sh
+Fatal error:
+Generators cannot return values using "return"
+```
+
+---
+
+## Introducing generators
+
+```php
 function getLines($file)
 {
     $fp = fopen($file, 'r');
 
-    while ($line = $fp->gets()) {
-*       yield $line;
+    while ($line = fgets($fp)) {
+        yield $line;
     }
 
     fclose($fp);
 }
 ```
+
 ---
 
 ## Introducing generators
@@ -448,36 +503,38 @@ function getLines($file)
 
 ---
 
+## Introducing generators
+
+```php
+$lineGenerator = getLines($file);
+foreach ($lineGenerator as $line) {
+    processLine($line);
+}
+```
+
+---
+
 class: center, middle
 
 ## Syntax sugar, nothing more
 
 ---
 
-## Using generators
-
-```php
-$lineGenerator = getLines(__FILE__);
-foreach ($lineGenerator as $no => $line) {
-    print $line;
-}
-```
-
----
-
 ## Generator advantages
 
-- simpler code
-- faster than iterators
+- simpler than iterators
+- faster than iterators*
+- easy to mock
 
-.text16[https://gist.github.com/nikic/2975796]
+\* .text16[https://gist.github.com/nikic/2975796]
 
 ---
 
 ## Generator disadvantages
 
 - can be traversed only once
-- cannot be indexed like an array
+- cannot be serialized
+- cannot be indexed (`ArrayAccess`)
 - cannot be used with `array_map` or `array_filter`
 
 ---
@@ -485,19 +542,19 @@ foreach ($lineGenerator as $no => $line) {
 ## Reverse generators
 
 ```php
-function writer($file)
+function logger($file)
 {
     $fp = fopen($file, 'a');
 
     while (true) {
-        $line = yield;
+*       $line = yield;
         $fp->write($line);
     }
 }
 ```
 
 ```php
-$w = writer('log.txt');
+$w = logger('log.txt');
 $w->send("foo");
 $w->send("bar");
 $w->send("baz");
@@ -526,7 +583,7 @@ echo $json;
 ### Generator #1: Read data from database and yield rows.
 
 ```php
-function getCategoryRows(PDO $pdo)
+function getRows(PDO $pdo)
 {
     $sql = "SELECT * FROM branche";
 
@@ -543,7 +600,7 @@ function getCategoryRows(PDO $pdo)
 ### Generator #1: Read data from database and yield rows.
 
 ```php
-function getCategoryRows(PDO $pdo)
+function getRows(PDO $pdo)
 {
     $sql = "SELECT * FROM branche";
 
@@ -561,7 +618,7 @@ function getCategoryRows(PDO $pdo)
 ### ~~Generator~~ #1: Read data from database and yield rows.
 
 ```php
-function getCategoryRows(PDO $pdo)
+function getRows(PDO $pdo)
 {
     $sql = "SELECT * FROM branche";
 
@@ -574,15 +631,40 @@ function getCategoryRows(PDO $pdo)
 
 ---
 
+### ~~Generator~~ #1: Read data from database and yield rows.
+
+```code16
+[
+    "id" => "1",
+    "brancheTyp_id" => "branche",
+    "kategorie_id" => null,
+    "topBranche" => "0",
+    "numCards" => "409",
+    "startChar" => "T",
+    "name" => "Textilwaren und Bekleidung Einzelhandel",
+    "linkName" => "textilwaren-und-bekleidung-einzelhandel",
+    "alternativName" => null,
+    "mediaVersion_id" => null,
+    "mhp_id" => null,
+    "beschreibung" => null,
+    "created" => "2008-03-03 13:46:50",
+    "lastmodify" => "2015-03-10 13:24:40",
+    "login_id" => "465"
+]
+```
+
+---
+
 ### Generator #2: Iterates over rows, and yields API models.
 
 ```php
-function getCategoryModels(Iterator $rows)
+function getModels(Iterator $rows)
 {
     foreach ($rows as $row) {
         yield [
-            'id' = $row['branche_id'];
-            'name' = $row['branche_name'];
+            'id'   => $row['id'],
+            'name' => $row['name'],
+            'slug' => $row['linkName'],
         ];
     }
 }
@@ -590,10 +672,23 @@ function getCategoryModels(Iterator $rows)
 
 ---
 
+### Generator #2: Iterates over rows, and yields API models.
+
+
+```code20
+[
+  'id' => '1',
+  'name' => 'Textilwaren und Bekleidung Einzelhandel',
+  'slug' => 'textilwaren-und-bekleidung-einzelhandel',
+]
+```
+
+---
+
 ### Generator #3: Iterates over models, and yields JSON chunks.
 
 ```php
-function getCategoriesJson(Iterator $models)
+function getJson(Iterator $models)
 {
     yield "[";
 
@@ -612,6 +707,48 @@ function getCategoriesJson(Iterator $models)
 
 ---
 
+```code16
+[
+```
+
+```code16
+{
+    "id": "1",
+    "name": "Textilwaren und Bekleidung Einzelhandel",
+    "slug": "textilwaren-und-bekleidung-einzelhandel"
+}
+```
+
+```code16
+,
+```
+
+```code16
+{
+    "id": "2",
+    "name": "Textilwaren Einzelhandel",
+    "slug": "textilwaren-einzelhandel"
+}
+```
+
+```code16
+,
+```
+
+```code16
+{
+    "id": "3",
+    "name": "Gest\u00fcte",
+    "slug": "gestuete"
+}
+```
+
+```code16
+]
+```
+
+---
+
 ### Usage
 
 ```code20
@@ -620,9 +757,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+$models = getModels($rows);
+$json = getJson($models);
 
 // Echo the data
 foreach ($json as $chunk) {
@@ -642,9 +779,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 *$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+$models = getModels($rows);
+$json = getJson($models);
 
 // Echo the data
 foreach ($json as $chunk) {
@@ -664,9 +801,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-*$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+*$rows = getRows($pdo);
+$models = getModels($rows);
+$json = getJson($models);
 
 // Echo the data
 foreach ($json as $chunk) {
@@ -686,9 +823,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-*$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+*$models = getModels($rows);
+$json = getJson($models);
 
 // Echo the data
 foreach ($json as $chunk) {
@@ -708,9 +845,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-*$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+$models = getModels($rows);
+*$json = getJson($models);
 
 // Echo the data
 foreach ($json as $chunk) {
@@ -730,9 +867,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+$models = getModels($rows);
+$json = getJson($models);
 
 // Echo the data
 *foreach ($json as $chunk) {
@@ -752,9 +889,9 @@ $pdo = new PDO("mysql:host=localhost;dbname=sandbox", "ihabunek");
 $pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, 0);
 
 // Data wrangling
-$rows = getCategoryRows($pdo);
-$models = getCategoryModels($rows);
-$json = getCategoriesJson($models);
+$rows = getRows($pdo);
+$models = getModels($rows);
+$json = getJson($models);
 
 // Create a streamed response
 *$response = new Symfony\Component\HttpFoundation\StreamedResponse();
@@ -939,8 +1076,8 @@ function xrange($min, $max, $step = 1)
 {
     for (
         $i = $min;
-        bc_cmp($i, $max) < 0;
-        $i = bc_add($i, $step)
+        bccmop($i, $max) < 0;
+        $i = bcadd($i, $step)
     ) {
         yield $i;
     }
@@ -956,8 +1093,8 @@ function xrange($min, $max, $step = 1)
 {
     for (
         $i = $min;
-        bc_cmp($i, $max) < 0;
-        $i = bc_add($i, $step)
+        bccmop($i, $max) < 0;
+        $i = bcadd($i, $step)
     ) {
         yield $i;
     }
@@ -966,6 +1103,173 @@ function xrange($min, $max, $step = 1)
 
 Limited to your memory.
 
+---
+
+class: middle, center
+
+# Iterator functions
+
+---
+
+### iterator_apply — Call a function for every element in an iterator
+
+```php
+$fun = function (Generator $gen) {
+    $item = $gen->current();
+    // Do something with $item
+    return true;
+};
+
+$gen = xrange(1, 100);
+iterator_apply($gen, $fun, [$gen]);
+```
+
+* equivalent to `array_walk()`
+
+---
+
+### iterator_count — Count the elements in an iterators
+
+```php
+$gen = xrange(1, 100);
+
+echo iterator_count($gen);
+```
+
+```sh
+100
+```
+
+---
+
+### iterator_to_array — Copy the iterator into an array
+
+```php
+$gen = xrange(1, 3);
+
+$array = iterator_to_array($gen);
+
+print_r($array);
+```
+
+```sh
+Array
+(
+    [0] => 1
+    [1] => 2
+    [2] => 3
+)
+```
+
+---
+
+class: center, middle
+
+# nikic/iter
+
+## Iteration primitives using generators
+
+---
+
+### range
+
+```php
+use function iter\range;
+
+range(0, 5);
+// 0, 1, 2, 3, 4, 5
+
+range(5, 0);
+// 5, 4, 3, 2, 1, 0
+
+range(0.0, 3.0, 0.5);
+// 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0
+```
+
+---
+
+### take
+
+```php
+take(5, range(0, PHP_INT_MAX));
+// 0, 1, 2, 3, 4, 5
+```
+
+---
+
+### map
+
+```php
+use function iter\fn\operator;
+use function iter\map;
+
+map(operator('*', 2), [1, 2, 3, 4, 5]);
+// 2, 4, 6, 8, 10
+```
+
+---
+
+### filter
+
+```php
+use function iter\filter;
+use function iter\fn\operator;
+
+filter(operator('<', 0), [0, -1, -10, 7, 20, -5, 7]);
+// -1, -10, -5
+```
+
+---
+
+### reduce
+
+```php
+use function iter\filter;
+use function iter\fn\operator;
+
+echo reduce(operator('+'), range(1, 5), 0);
+// 15
+
+echo reduce(operator('*'), range(1, 5), 1);
+ // 120
+```
+
+---
+
+### reindex
+
+```code20
+use function iter\fn\index;
+use function iter\reindex;
+
+$input = [
+    ['id' => 10, 'name' => 'Maja'],
+    ['id' => 27, 'name' => 'Ivan'],
+    ['id' => 39, 'name' => 'Pero'],
+    ['id' => 42, 'name' => 'Luna'],
+];
+
+*reindex(index('id'), $input);
+```
+
+```code20
+[
+    10 => ['id' => 10, 'name' => 'Maja'],
+    27 => ['id' => 27, 'name' => 'Ivan'],
+    39 => ['id' => 39, 'name' => 'Pero'],
+    42 => ['id' => 42, 'name' => 'Luna'],
+];
+```
+
+---
+
+class: center, middle
+
+# Questions?
+
+## Rate my talk!
+
+https://joind.in/14684
 
 
     </textarea>
