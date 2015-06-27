@@ -30,6 +30,16 @@ foreach ($it as $key => $file) {
     $talks[] = $data;
 }
 
+// Sort talks by date descending
+usort($talks, function ($one, $other) {
+    $one = strtotime($one->date);
+    $other = strtotime($other->date);
+    if ($one == $other) {
+        return 0;
+    }
+    return ($one < $other) ? 1 : -1;
+});
+
 ?><!DOCTYPE html>
 <html>
 <head>
