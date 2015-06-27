@@ -4,18 +4,13 @@
  * Script which displays a list of talks in HTML.
  */
 
-$talks = array();
-foreach(scandir(__DIR__) as $file) {
-    if ($file[0] == '.') {
+$it = new FilesystemIterator(__DIR__);
+foreach ($it as $key => $file) {
+    if (!$file->isDir()) {
         continue;
     }
 
-    $dir = __DIR__ . '/' . $file;
-    $json = $dir . '/talk.json';
-
-    if (!is_dir($dir)) {
-        continue;
-    }
+    $json = "$file/talk.json";
 
     if (!file_exists($json)) {
         continue;
@@ -27,32 +22,45 @@ foreach(scandir(__DIR__) as $file) {
     }
 
     $data = json_decode($data);
-    if ($data === false) {
+    if (json_last_error() !== JSON_ERROR_NONE) {
         continue;
     }
 
-    $data->dir = basename($dir);
+    $data->dir = $file->getBaseName();
     $talks[] = $data;
 }
 
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title>Talks</title>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <title>Talks by Ivan Habunek</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/united/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <h1>Talks by <a target="_blank" href="http://twitter.com/ihabunek">@ihabunek</a></h1>
+    <h1>Talks by Ivan Habunek</h1>
+    <h3><a target="_blank" href="http://twitter.com/ihabunek">@ihabunek</a></h3>
 
     <?php foreach($talks as $talk) { ?>
-    <h3><a href="<?= $talk->dir ?>"><?= $talk->title ?></a></h3>
-    <p>
-        <?= $talk->description ?><br />
-        <?= $talk->date ?>, <?= $talk->location ?>
-    </p>
-
+        <hr />
+        <h3><?= $talk->title ?></h3>
+        <p><?= $talk->description ?></p>
+        <p>
+            <?php if (isset($talk->event_url)) { ?>
+                <a href="<?= $talk->event_url ?>"><?= $talk->event ?></a>
+            <?php } else { ?>
+                <?= $talk->event ?>
+            <?php } ?><br />
+            <?= $talk->date ?>
+        </p>
+        <a class="btn btn-primary btn-sm" href="<?= $talk->dir ?>">Slides</a>
+        <?php if (isset($talk->video)) { ?>
+            <a class="btn btn-primary btn-sm" href="<?= $talk->video ?>">Video</a>
+        <?php } ?>
+        <?php if (isset($talk->rate)) { ?>
+            <a class="btn btn-primary btn-sm" href="<?= $talk->rate ?>">Rate the talk</a>
+        <?php } ?>
     <?php } ?>
 </div>
 </body>

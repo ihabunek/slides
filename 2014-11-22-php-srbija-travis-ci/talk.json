@@ -2,5 +2,8 @@
     "title": "Travis CI",
     "description": "Testing open source projects",
     "date": "2014-11-22",
-    "location": "PHP Srbija, Beograd"
+    "event": "TDay 2014, PHP Srbija, Belgrade",
+    "event_url": "http://tday2014.phpsrbija.rs/",
+    "video": "https://www.youtube.com/watch?v=1FqQDKRlWbk",
+    "rate": "https://joind.in/talk/view/12413"
 }

@@ -1,6 +1,7 @@
 {
     "title": "Password hashing functions",
-    "description": "Improvements in PHP 5.5",
+    "description": "Improvements in PHP 5.5 (flash talk)",
     "date": "2014-04-17",
-    "location": "ZgPHP Meetup #32"
+    "event": "ZgPHP Meetup #32",
+    "rate": "https://joind.in/talk/view/11197"
 }
